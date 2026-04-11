@@ -11,7 +11,7 @@ exports.addToCart = async (req, res) => {
     const userId = req.user.id;
 
     // 🔥 1. VALIDATE INPUT
-    if (!productId || !quantity || quantity <= 0) {
+    if (!productId || quantity === 0) {
       return res.status(400).json({
         message: "Invalid data ❌"
       });
