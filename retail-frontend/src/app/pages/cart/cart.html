@@ -1,0 +1,65 @@
+<div class="cart-page">
+
+  <h2 class="title">🛒 Your Cart</h2>
+
+  <div *ngIf="items.length==0" class="empty">
+    Cart is empty 😢
+  </div>
+
+  <div class="cart-layout" *ngIf="items.length>0">
+
+    <!-- LEFT SIDE (ITEMS) -->
+    <div class="cart-left">
+
+      <div class="cart-item" *ngFor="let item of items">
+
+        <img [src]="item.product.image" class="cart-img">
+
+        <div class="details">
+
+          <h3>{{item.product.name}}</h3>
+
+          <p class="price">₹{{item.product.price}}</p>
+
+          <div class="qty">
+            <button (click)="decreaseQty(item)">-</button>
+            <span>{{item.quantity}}</span>
+            <button (click)="increaseQty(item)">+</button>
+          </div>
+
+          <button class="remove" (click)="removeItem(item)">
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE (SUMMARY) -->
+    <div class="cart-right">
+
+      <h3>🧾 Price Details</h3>
+
+      <div class="row">
+        <span>Subtotal</span>
+        <span>₹{{total}}</span>
+      </div>
+
+      <div class="row total">
+        <span>Total</span>
+        <span>₹{{total}}</span>
+      </div>
+
+      <a routerLink="/checkout">
+        <button class="checkout-btn">
+          Proceed to Checkout 🚀
+        </button>
+      </a>
+
+    </div>
+
+  </div>
+
+</div>

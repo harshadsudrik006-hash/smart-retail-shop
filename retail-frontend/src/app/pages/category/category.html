@@ -1,0 +1,93 @@
+<div class="category-page">
+
+  <!-- LEFT CATEGORY MENU -->
+  <div class="left">
+
+    <div
+      class="cat-item"
+      *ngFor="let cat of categories"
+      [class.active]="selectedCategoryId === cat._id"
+      (click)="changeCategory(cat)"
+    >
+      {{cat.name}}
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+
+    <!-- SUBCATEGORY NAVBAR -->
+    <div class="sub-navbar">
+      <span
+        *ngFor="let sub of subcategories"
+        [class.active]="selectedSub?._id === sub._id"
+        (click)="selectSub(sub)"
+      >
+        {{sub.name}}
+      </span>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="products">
+
+      <div class="product-card"
+        *ngFor="let p of products"
+        [class.out]="!p.stock || +p.stock <= 0">
+
+        <!-- 🔥 DELIVERY TAG
+        <div class="delivery">⏱ 8 MINS</div> -->
+
+        <!-- 🔥 DISCOUNT -->
+        <div class="discount" *ngIf="p.originalPrice">
+          {{ ((p.originalPrice - p.price) / p.originalPrice * 100) | number:'1.0-0' }}% OFF
+        </div>
+
+        <!-- 🔥 IMAGE + BADGE -->
+        <div style="position:relative">
+
+          <img [src]="p.image">
+
+          <!-- 🔥 OUT OF STOCK -->
+          <div *ngIf="!p.stock || +p.stock <= 0" class="badge">
+            Out of Stock
+          </div>
+
+        </div>
+
+        <!-- NAME -->
+        <h4 class="name">{{p.name}}</h4>
+
+        <!-- WEIGHT -->
+        <p class="weight">{{p.weight || '1 unit'}}</p>
+
+        <!-- PRICE -->
+        <div class="price-box">
+          <span class="price">₹{{p.price}}</span>
+          <span class="old" *ngIf="p.originalPrice">₹{{p.originalPrice}}</span>
+        </div>
+
+        <!-- 🔥 ADD BUTTON UPDATED -->
+        <button 
+          *ngIf="!quantities[p._id]" 
+          (click)="add(p)" 
+          class="add-btn"
+          [disabled]="!p.stock || +p.stock <= 0"
+        >
+          {{ (!p.stock || +p.stock <= 0) ? 'Out of Stock' : 'ADD' }}
+        </button>
+
+        <!-- QTY -->
+        <div class="qty-box" *ngIf="quantities[p._id]">
+          <button (click)="decrease(p)">-</button>
+          <span>{{quantities[p._id]}}</span>
+          <button (click)="increase(p)">+</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

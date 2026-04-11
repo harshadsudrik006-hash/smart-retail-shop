@@ -1,0 +1,33 @@
+<h2 class="title">📦 Track Your Order</h2>
+
+<div *ngIf="order">
+
+  <h3 class="status">
+    Current Status: {{order.status}}
+  </h3>
+
+  <!-- 🔥 MAP -->
+  <div id="map" class="map"></div>
+
+  <!-- 🔥 TIMELINE -->
+  <div class="timeline">
+
+    <div 
+      *ngFor="let t of order.timeline" 
+      class="step"
+      [class.done]="t.completed"
+      [class.active]="t.current"
+    >
+
+      <div class="circle"></div>
+
+      <div class="content">
+        <p>{{t.status}}</p>
+        <small *ngIf="t.current">Current</small>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

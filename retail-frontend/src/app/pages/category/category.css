@@ -1,0 +1,209 @@
+.category-page{
+  display:flex;
+}
+
+/* LEFT MENU */
+.left{
+  width:180px;
+  background:#f5f5f5;
+  height:100vh;
+  position:sticky;
+  top:0;
+  overflow-y:auto;
+}
+
+.cat-item{
+  padding:12px;
+  cursor:pointer;
+}
+
+.cat-item.active{
+  background:white;
+  font-weight:bold;
+}
+
+/* RIGHT */
+.right{
+  flex:1;
+  padding:10px;
+  height:100vh;
+  overflow-y:auto;
+}
+
+/* 🔥 SUB NAV (MERGED + FIXED) */
+.sub-navbar{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin-bottom:10px;
+
+  position:sticky;
+  top: 10px;;
+  z-index:50;
+  background:white;
+  padding:10px 0;
+
+  box-shadow:0 2px 8px rgba(0,0,0,0.08); /* 🔥 smooth UI */
+}
+
+.sub-navbar span{
+  padding:6px 12px;
+  background:#eee;
+  padding-top: 10px;
+  border-radius:20px;
+  cursor:pointer;
+  white-space:nowrap; /* 🔥 FIX scroll text wrap */
+}
+
+.sub-navbar .active{
+  background:#7b3fe4;
+  color:white;
+  width: 100;
+}
+
+/* PRODUCTS GRID */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:15px;
+}
+
+/* CARD */
+.product-card{
+  position:relative;
+  border:1px solid #eee;
+  padding:10px;
+  border-radius:12px;
+  background:white;
+  transition:0.2s;
+}
+
+.product-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* IMAGE */
+.product-card img{
+  width:100%;
+  height:130px;
+  object-fit:contain;
+  position:relative;
+  z-index:1;
+}
+
+/* NAME */
+.name{
+  font-size:14px;
+  font-weight:600;
+  margin:5px 0;
+}
+
+/* WEIGHT */
+.weight{
+  font-size:12px;
+  color:#777;
+}
+
+/* PRICE */
+.price-box{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.price{
+  color:#000;
+  font-weight:bold;
+}
+
+.old{
+  text-decoration:line-through;
+  color:#999;
+  font-size:13px;
+}
+
+/* ADD BUTTON */
+.add-btn{
+  width:100%;
+  margin-top:8px;
+  padding:6px;
+  border:1px solid green;
+  color:green;
+  background:white;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.add-btn:hover{
+  background:#eaffea;
+}
+
+/* 🔥 DISABLED BUTTON */
+.add-btn:disabled{
+  background:#ccc !important;
+  color:#666 !important;
+  border-color:#ccc !important;
+  cursor:not-allowed;
+}
+
+/* QTY */
+.qty-box{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  border:1px solid green;
+  border-radius:6px;
+}
+
+.qty-box button{
+  background:none;
+  border:none;
+  padding:5px 10px;
+  cursor:pointer;
+}
+
+/* DELIVERY TAG */
+.delivery{
+  position:absolute;
+  top:5px;
+  left:5px;
+  font-size:10px;
+  background:#eaffea;
+  padding:3px 6px;
+  border-radius:5px;
+}
+
+/* 🔥 DISCOUNT */
+.discount{
+  position:absolute;
+  top:8px;
+  right:8px;
+  background:#4a6cf7;
+  color:white;
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:6px;
+  z-index:10;
+  font-weight:600;
+}
+
+/* 🔥 OUT OF STOCK */
+.product-card.out{
+  opacity:0.5;
+}
+
+/* 🔥 BADGE */
+.product-card .badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:red;
+  color:white;
+  padding:4px 8px;
+  font-size:11px;
+  border-radius:5px;
+  z-index:20;
+  font-weight:600;
+}

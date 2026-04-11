@@ -1,0 +1,128 @@
+<h2 class="title">Shop by Categories</h2>
+
+<div class="category-scroll">
+  <div class="category-item"
+       *ngFor="let cat of categories"
+       [routerLink]="['/category',cat._id]">
+    <p>{{cat.name}}</p>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div *ngFor="let section of homeData" class="section">
+
+  <div class="section-header">
+    <h3>{{section.title}}</h3>
+  </div>
+
+  <div class="product-row">
+
+    <!-- 🔥 UPDATED CARD -->
+    <div class="card"
+         *ngFor="let p of section.products"
+         [class.out]="!p.stock || p.stock <= 0">
+
+      <!-- 🔥 IMAGE + BADGE -->
+      <div class="img-box">
+
+        <img [src]="p.image" loading="lazy">
+
+        <!-- OUT OF STOCK -->
+        <div *ngIf="!p.stock || p.stock <= 0" class="badge">
+          Out of Stock
+        </div>
+
+      </div>
+
+      <p class="name">{{p.name}}</p>
+
+      <p class="weight">{{p.weight || '1 unit'}}</p>
+
+      <div class="price-box">
+        <span class="price">₹{{p.price}}</span>
+        <span class="old" *ngIf="p.originalPrice">₹{{p.originalPrice}}</span>
+      </div>
+
+      <!-- ADD BUTTON -->
+      <button 
+        *ngIf="!quantities[p._id]" 
+        (click)="add(p)"
+        [disabled]="!p.stock || p.stock <= 0"
+      >
+        {{ (!p.stock || p.stock <= 0) ? 'Out of Stock' : 'ADD' }}
+      </button>
+
+      <!-- QTY BOX -->
+      <div class="qty-box" *ngIf="quantities[p._id]">
+
+        <button (click)="decrease(p)">-</button>
+
+        <span>{{quantities[p._id]}}</span>
+
+        <button (click)="increase(p)">+</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- CHAT BUTTON -->
+<div class="chat-btn" (click)="toggleChat()">
+  💬
+</div>
+
+<!-- CHAT BOX -->
+<div class="chat-box" *ngIf="showChat">
+
+  <div class="chat-header">
+    <span>🤖 Retail Assistant</span>
+    <button class="close-btn" (click)="toggleChat()">✖</button>
+  </div>
+
+  <div class="chat-body">
+
+    <div *ngFor="let m of messages"
+         [ngClass]="m.type === 'user' ? 'user-msg' : 'bot-msg'">
+
+      <div *ngIf="m.type === 'user'">
+        {{m.text}}
+      </div>
+
+      <div *ngIf="m.type === 'bot'">
+
+        <div class="bot-title">
+          {{m.text}}
+        </div>
+
+        <ul *ngIf="m.list" class="bot-list">
+          <li *ngFor="let item of m.list">
+            <span>{{item.name}}</span>
+            <span class="price">₹{{item.price}}</span>
+          </li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="chat-input">
+    <input 
+      [(ngModel)]="userMsg" 
+      placeholder="Type your message..."
+      (keyup.enter)="send()"
+    />
+    <button (click)="send()">➤</button>
+  </div>
+
+</div>
+
+<!-- BANNER -->
+<div class="banner">
+  <h3>🔥 Up to 50% OFF</h3>
+  <p>On Grocery Items</p>
+</div>

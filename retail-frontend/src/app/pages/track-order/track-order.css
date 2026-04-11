@@ -1,0 +1,65 @@
+.title{
+  text-align:center;
+  margin:20px;
+}
+
+/* STATUS */
+.status{
+  text-align:center;
+  color:#7b3fe4;
+  margin-bottom:20px;
+}
+
+/* MAP */
+.map{
+  height: 400px;   /* 🔥 important */
+  width: 100%;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+/* TIMELINE */
+.timeline{
+  position:relative;
+  margin:20px;
+  padding-left:20px;
+  border-left:3px solid #ddd;
+}
+
+/* STEP */
+.step{
+  position:relative;
+  margin-bottom:30px;
+}
+
+/* CIRCLE */
+.circle{
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:#ccc;
+  position:absolute;
+  left:-28px;
+  top:5px;
+}
+
+/* COMPLETED */
+.step.done .circle{
+  background:#28a745;
+}
+
+/* CURRENT */
+.step.active .circle{
+  background:#7b3fe4;
+  transform:scale(1.2);
+}
+
+/* TEXT */
+.content p{
+  font-weight:600;
+  margin:0;
+}
+
+.content small{
+  color:#7b3fe4;
+}

@@ -1,0 +1,139 @@
+body{
+  background:#f5f6fa;
+  font-family: Arial, sans-serif;
+}
+
+/* TITLE */
+.title{
+  text-align:center;
+  margin:15px 0;
+  font-size:20px;
+  font-weight:600;
+}
+
+/* 🔍 TOP BAR */
+.top-bar{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  max-width:600px;
+  margin:auto;
+}
+
+.top-bar input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+.top-bar button{
+  padding:10px 12px;
+  background:#6c5ce7;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.top-bar button:hover{
+  background:#5a4bdc;
+}
+
+/* 🗺️ MAP */
+#map{
+  width:95%;
+  height:280px;          /* reduced */
+  margin:10px auto;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+/* 🔽 SEARCH RESULTS */
+.results{
+  max-width:600px;
+  margin:0 auto;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  max-height:150px;
+  overflow:auto;
+}
+
+.item{
+  padding:10px;
+  border-bottom:1px solid #eee;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.item:hover{
+  background:#f1f1f1;
+}
+
+/* 📦 FORM CARD */
+.form-box{
+  max-width:500px;
+  margin:20px auto;
+  background:white;
+  padding:15px;
+  border-radius:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* ADDRESS TEXT */
+.address{
+  font-size:13px;
+  color:#555;
+  background:#f1f2f6;
+  padding:8px;
+  border-radius:8px;
+}
+
+/* INPUTS */
+.form-box input,
+.form-box select{
+  padding:9px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+/* BUTTON */
+.form-box button{
+  margin-top:10px;
+  background:#6c5ce7;
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.form-box button:hover{
+  background:#5a4bdc;
+}
+
+/* 📱 MOBILE RESPONSIVE */
+@media(max-width:600px){
+
+  #map{
+    height:250px;
+  }
+
+  .form-box{
+    margin:15px;
+  }
+
+  .top-bar{
+    padding:8px;
+  }
+}

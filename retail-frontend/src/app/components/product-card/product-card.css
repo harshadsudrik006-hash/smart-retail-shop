@@ -1,0 +1,74 @@
+.product-card{
+  border:1px solid #eee;
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  background:white;
+  transition:0.3s;
+  position:relative;
+}
+
+/* 🔥 FADE EFFECT */
+.product-card.out{
+  opacity:0.5;
+}
+
+/* IMAGE */
+/* 🔥 IMAGE FIX */
+.img-container{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:150px;
+  overflow:hidden;
+}
+
+.product-img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;  /* 🔥 IMPORTANT */
+  padding:10px;
+  background:#fff;
+  transition: transform 0.3s ease;
+}
+
+/* 🔥 BADGE */
+.badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:red;
+  color:white;
+  padding:5px 10px;
+  font-size:12px;
+  border-radius:5px;
+}
+
+/* BUTTON */
+button{
+  margin-top:10px;
+  padding:10px;
+  width:100%;
+  background:#28a745;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+button:disabled{
+  background:#ccc;
+  cursor:not-allowed;
+}
+
+/* 🔥 HOVER EFFECT */
+.product-card:hover .product-img{
+  transform:scale(1.05);
+}
+
+/* 🔥 CARD HOVER */
+.product-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 6px 16px rgba(0,0,0,0.12);
+}

@@ -1,0 +1,83 @@
+<div class="checkout-container">
+
+  <h2 class="title">📍 Select Delivery Address</h2>
+
+  <div class="address-list">
+    <div *ngFor="let a of addresses"
+         (click)="selectedAddress=a"
+         class="address-card"
+         [class.active]="selectedAddress?._id===a._id">
+
+      <div>
+        <div class="type">{{a.type}}</div>
+        <p>{{a.flat}}, {{a.building}}</p>
+        <p>{{a.address}}</p>
+      </div>
+
+      <div *ngIf="selectedAddress?._id===a._id">✔</div>
+
+    </div>
+  </div>
+
+  <!-- BILL -->
+  <div class="bill-box">
+    <h3>🧾 Bill</h3>
+
+    <div>Subtotal: ₹{{cartTotal}}</div>
+
+    <div *ngIf="discount > 0">
+      Coupon: -₹{{discount}}
+    </div>
+
+    <hr>
+
+    <div>Total: ₹{{getFinalAmount()}}</div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="payment-box">
+    <h3>💳 Payment</h3>
+
+    <label>
+      <input type="radio" [(ngModel)]="paymentMethod" value="online">
+      Razorpay
+    </label>
+
+    <label>
+      <input type="radio" [(ngModel)]="paymentMethod" value="qr">
+      UPI QR
+    </label>
+
+    <label>
+      <input type="radio" [(ngModel)]="paymentMethod" value="cod">
+      COD
+    </label>
+  </div>
+
+  <!-- BUTTON -->
+  <button (click)="proceed()">
+    Continue ₹{{getFinalAmount()}}
+  </button>
+
+  <!-- 🔥 QR -->
+  <div *ngIf="paymentMethod==='qr' && qrImage">
+    <h3>Scan & Pay</h3>
+    <img [src]="qrImage" width="200">
+    <button (click)="confirmQRPayment()">I Paid</button>
+  </div>
+
+  <!-- OTP -->
+  <div *ngIf="otpSent">
+    <h3>Enter OTP</h3>
+
+    <input maxlength="1" (input)="moveNext($event,1)">
+    <input maxlength="1" (input)="moveNext($event,2)">
+    <input maxlength="1" (input)="moveNext($event,3)">
+    <input maxlength="1" (input)="moveNext($event,4)">
+    <input maxlength="1" (input)="moveNext($event,5)">
+    <input maxlength="1" (input)="moveNext($event,6)">
+
+    <button (click)="placeOrder()">Confirm</button>
+  </div>
+
+</div>

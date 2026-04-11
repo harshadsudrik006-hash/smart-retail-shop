@@ -1,0 +1,48 @@
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+margin-top:20px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+th{
+background:#7b3fe4;
+color:white;
+}
+
+.ok{
+color:green;
+font-weight:bold;
+}
+
+.low{
+color:orange;
+font-weight:bold;
+}
+
+.out{
+color:red;
+font-weight:bold;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+.back-btn{
+background:#6c757d;
+color:white;
+border:none;
+padding:8px 10px;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:15px;
+margin: 2px;
+}

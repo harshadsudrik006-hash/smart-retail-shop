@@ -1,0 +1,39 @@
+<div class="auth-container">
+
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="bg-img"></div>
+
+    <div class="content">
+      <h2>Get all your buying problems solved today</h2>
+      <p>
+        Join Smart Retail and get connected to different suppliers across the globe
+      </p>
+
+      <img src="/assets/ecommerce.png" class="cart-img">
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+
+    <h2>Welcome Back 👋</h2>
+
+    <input type="email" placeholder="Email" [(ngModel)]="email">
+    <input type="password" placeholder="Password" [(ngModel)]="password">
+
+    <button (click)="login()">Login</button>
+
+    <p class="link">
+      Don't have account?
+      <a routerLink="/register">Sign Up</a>
+    </p>
+
+    <div class="divider">OR</div>
+
+    <!-- ✅ GOOGLE BUTTON -->
+    <div id="googleBtn"></div>
+
+  </div>
+
+</div>

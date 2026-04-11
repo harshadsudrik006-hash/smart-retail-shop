@@ -1,0 +1,44 @@
+<h2>🛒 My Orders</h2>
+
+<div *ngIf="loading" class="loading">
+  Loading orders...
+</div>
+
+<div *ngIf="!loading && orders.length === 0" class="empty">
+  No orders found
+</div>
+
+<div class="order-card" *ngFor="let order of orders">
+
+  <div class="top">
+    <h3>Order #{{order._id}}</h3>
+    <span 
+      class="status"
+      [ngClass]="{
+        'pending': order.status==='Pending',
+        'progress': order.status==='Out for Delivery',
+        'done': order.status==='Delivered'
+      }"
+    >
+      {{order.status}}
+    </span>
+  </div>
+
+  <p><b>Total:</b> ₹{{order.totalAmount}}</p>
+
+  <div class="actions">
+
+    <a [routerLink]="['/track-order', order._id]">
+      <button class="track">📍 Track</button>
+    </a>
+
+    <button 
+      class="invoice"
+      *ngIf="order.status === 'Delivered'"
+      (click)="downloadInvoice(order._id)">
+      🧾 Invoice
+    </button>
+
+  </div>
+
+</div>

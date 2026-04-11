@@ -1,0 +1,69 @@
+<div class="navbar">
+
+  <!-- LOGO -->
+  <div class="logo" (click)="goHome()">
+    <img src="assets/logo_4.png" alt="logo">
+    <span>Smart Retail Shop</span>
+  </div>
+
+  <!-- USER SEARCH -->
+  <div class="search-box" *ngIf="role === 'user'">
+
+    <input
+      type="text"
+      placeholder="Search products..."
+      [(ngModel)]="searchText"
+      (keyup.enter)="search()"
+    >
+
+    <button (click)="search()">🔍</button>
+
+    <button class="img-btn" (click)="triggerFileInput(fileInput)">📸</button>
+
+    <input
+      #fileInput
+      type="file"
+      hidden
+      (change)="onImageSearch($event)"
+    >
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+
+    <!-- NOT LOGIN -->
+    <a *ngIf="!user" routerLink="/login">Login</a>
+
+    <!-- USER NAVBAR -->
+    <div *ngIf="role === 'user'" class="icons">
+      <span (click)="goProfile()">👤</span>
+      <span class="cart-icon" (click)="goCart()">
+  🛒
+  <span class="cart-badge" *ngIf="cartCount > 0">
+    {{cartCount}}
+  </span>
+</span>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+    <!-- ADMIN NAVBAR -->
+    <div *ngIf="role === 'admin'" class="icons">
+      <span routerLink="/admin/dashboard">📊</span>
+      <span routerLink="/admin/products">📦</span>
+      <span routerLink="/admin/orders">🧾</span>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+    <!-- DELIVERY NAVBAR -->
+    <div *ngIf="role === 'delivery'" class="icons">
+      <span routerLink="/delivery">🚚</span>
+      <span routerLink="/my-orders">📦</span>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+  </div>
+
+</div>
+
+

@@ -1,0 +1,28 @@
+<h2>Category Management</h2>
+
+<div class="add-category">
+<input placeholder="Category Name" [(ngModel)]="name">
+<button (click)="addCategory()">Add Category</button>
+</div>
+
+<!-- UPDATE BOX -->
+<div *ngIf="selectedCategory" class="update-box">
+<input [(ngModel)]="updatedName">
+<button (click)="updateCategory()">Save</button>
+</div>
+
+<div class="category-list">
+<div class="category-card" *ngFor="let cat of categories">
+
+<span>{{cat.name}}</span>
+
+<button class="edit" (click)="editCategory(cat)">Update</button>
+
+<button class="delete" (click)="deleteCategory(cat._id)">
+Delete
+</button>
+
+</div>
+</div>
+
+<button class="back-btn" (click)="goBack()">← Back</button>

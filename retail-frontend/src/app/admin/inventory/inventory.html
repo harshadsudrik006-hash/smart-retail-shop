@@ -1,0 +1,49 @@
+<h2>Inventory Management</h2>
+
+    <button class="back-btn" (click)="goBack()">
+        ← Back
+    </button>
+<table>
+
+<thead>
+
+<tr>
+<th>Product</th>
+<th>Stock</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr *ngFor="let p of products">
+
+<td>{{p.name}}</td>
+
+<td>{{p.stock}}</td>
+
+<td>
+
+<span *ngIf="p.stock == 0" class="out">
+Out of Stock
+</span>
+
+<span *ngIf="p.stock > 0 && p.stock <= 20" class="low">
+Low Stock
+</span>
+
+<span *ngIf="p.stock > 20" class="ok">
+In Stock
+</span>
+
+</td>
+
+
+
+</tr>
+
+</tbody>
+
+
+</table>

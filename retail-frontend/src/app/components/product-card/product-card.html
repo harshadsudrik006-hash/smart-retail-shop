@@ -1,0 +1,23 @@
+<div class="product-card" [class.out]="+product.stock <= 0">
+
+  <div class="img-container">
+    <img [src]="product.image" class="product-img">
+
+    <!-- 🔥 OUT OF STOCK -->
+    <div class="badge" *ngIf="+product.stock <= 0">
+      Out of Stock
+    </div>
+  </div>
+
+  <h3>{{product.name}}</h3>
+
+  <p class="price">₹{{product.price}}</p>
+
+  <button 
+    (click)="addToCart()" 
+    [disabled]="+product.stock <= 0"
+  >
+    {{ (+product.stock <= 0) ? 'Out of Stock' : 'Add to Cart' }}
+  </button>
+
+</div>

@@ -1,0 +1,198 @@
+.checkout-container{
+  max-width:650px;
+  margin:auto;
+  padding:20px;
+  font-family:'Segoe UI', sans-serif;
+}
+
+.title{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+/* ADDRESS */
+.address-card{
+  border:1px solid #e5e5e5;
+  padding:15px;
+  margin-bottom:12px;
+  border-radius:12px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  transition:0.3s;
+  background:white;
+}
+
+.address-card:hover{
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.address-card.active{
+  border:2px solid #28a745;
+  background:#f3fff6;
+}
+
+.type{
+  font-size:12px;
+  color:#7b3fe4;
+  text-transform:uppercase;
+}
+
+.bold{
+  font-weight:600;
+}
+
+.light{
+  color:#666;
+}
+
+.tick{
+  color:#28a745;
+  font-size:18px;
+}
+
+/* BILL */
+.bill-box{
+  margin-top:20px;
+  padding:20px;
+  border-radius:12px;
+  background:white;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+
+.discount{
+  color:#28a745;
+}
+
+.total{
+  font-size:18px;
+  font-weight:bold;
+  color:#28a745;
+}
+
+/* POINTS */
+.points-box{
+  margin-top:15px;
+  padding:12px;
+  background:#fff8e1;
+  border-radius:10px;
+  font-size:14px;
+}
+
+/* PAYMENT */
+.payment-box{
+  margin-top:20px;
+  padding:15px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.pay-option{
+  display:block;
+  margin:10px 0;
+  font-size:15px;
+}
+
+/* BUTTON */
+.pay-btn{
+  width:100%;
+  margin-top:20px;
+  padding:14px;
+  background:linear-gradient(90deg,#28a745,#218838);
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.pay-btn:hover{
+  transform:scale(1.02);
+}
+
+.pay-btn:disabled{
+  background:#ccc;
+  cursor:not-allowed;
+}
+
+/* OTP */
+.otp-container{
+  text-align:center;
+  margin-top:25px;
+}
+
+.otp-inputs{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:15px 0;
+}
+
+.otp-inputs input{
+  width:50px;
+  height:50px;
+  text-align:center;
+  font-size:18px;
+  border:2px solid #ddd;
+  border-radius:10px;
+}
+
+.otp-inputs input:focus{
+  border-color:#28a745;
+}
+
+.confirm-btn{
+  padding:10px 20px;
+  background:#28a745;
+  color:white;
+  border:none;
+  border-radius:8px;
+}
+
+.qr-box{
+  text-align:center;
+  margin-top:25px;
+  padding:20px;
+  border-radius:12px;
+  background:#f8f9ff;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.qr-img{
+  width:220px;
+  margin:10px 0;
+  border-radius:10px;
+}
+
+.upi{
+  font-size:14px;
+  color:#555;
+}
+
+.amount{
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+.confirm-btn{
+  padding:10px 20px;
+  background:#28a745;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.confirm-btn:hover{
+  background:#218838;
+}

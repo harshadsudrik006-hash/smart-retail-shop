@@ -1,0 +1,93 @@
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.loading{
+  text-align:center;
+  color:#777;
+}
+
+.empty{
+  text-align:center;
+  color:#999;
+}
+
+.order-card{
+  border:1px solid #ddd;
+  padding:15px;
+  border-radius:12px;
+  margin:15px auto;
+  width:90%;
+  background:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  transition:0.3s;
+}
+
+.order-card:hover{
+  transform:scale(1.02);
+}
+
+/* TOP ROW */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* STATUS */
+.status{
+  font-weight:bold;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:13px;
+}
+
+/* STATUS COLORS */
+.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.progress{
+  background:#d1ecf1;
+  color:#0c5460;
+}
+
+.done{
+  background:#d4edda;
+  color:#155724;
+}
+
+/* BUTTON GROUP */
+.actions{
+  margin-top:10px;
+}
+
+button{
+  margin-right:10px;
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* TRACK BUTTON */
+.track{
+  background:#007bff;
+  color:white;
+}
+
+.track:hover{
+  background:#0056b3;
+}
+
+/* INVOICE BUTTON */
+.invoice{
+  background:#28a745;
+  color:white;
+}
+
+.invoice:hover{
+  background:#218838;
+}

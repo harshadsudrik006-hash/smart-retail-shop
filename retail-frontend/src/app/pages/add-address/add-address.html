@@ -1,0 +1,45 @@
+<h2 class="title">Add Address</h2>
+
+<!-- 🔍 SEARCH BAR -->
+<div class="top-bar">
+<input 
+  [(ngModel)]="searchText"
+  (input)="onSearchChange()"
+  placeholder="Search location..."
+>
+
+  <button (click)="searchAddress()">🔍</button>
+
+  <button (click)="getCurrentLocation()">📍</button>
+</div>
+
+<!-- 🔽 SEARCH RESULTS -->
+<div class="results" *ngIf="searchResults.length">
+  <div *ngFor="let r of searchResults"
+       (click)="selectLocation(r)"
+       class="item">
+    {{r.display_name}}
+  </div>
+</div>
+
+<!-- 🗺️ MAP -->
+<div id="map"></div>
+
+<!-- 📦 FORM BELOW MAP (NOT FIXED NOW ✅) -->
+<div class="form-box" *ngIf="selected">
+
+  <p class="address">{{selected.display_name}}</p>
+
+  <input [(ngModel)]="flat" placeholder="Flat / Room No">
+  <input [(ngModel)]="building" placeholder="Building Name">
+  <input [(ngModel)]="floor" placeholder="Floor">
+  <input [(ngModel)]="landmark" placeholder="Landmark">
+
+  <select [(ngModel)]="type">
+    <option value="home">🏠 Home</option>
+    <option value="work">🏢 Work</option>
+  </select>
+
+  <button (click)="saveAddress()">Save Address</button>
+
+</div>

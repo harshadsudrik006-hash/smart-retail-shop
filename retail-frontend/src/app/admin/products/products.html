@@ -1,0 +1,60 @@
+<h2>Manage Products</h2>
+
+<button class="back-btn" (click)="goBack()">← Back</button>
+
+<a routerLink="/admin/products/add">
+  <button>Add Product</button>
+</a>
+
+<div class="product-table">
+
+<table>
+
+<thead>
+<tr>
+<th>Image</th>
+<th>Name</th>
+<th>Price</th>
+<th>Stock</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr *ngFor="let p of products">
+
+<td>
+  <img [src]="p.image" width="60">
+</td>
+
+<td>{{p.name}}</td>
+
+<td>₹{{p.price}}</td>
+
+<td>{{p.stock}}</td>
+
+<td>
+
+  <!-- EDIT -->
+  <button routerLink="/admin/products/edit/{{p._id}}">
+    ✏️ Edit
+  </button>
+
+  <!-- DELETE -->
+  <button (click)="deleteProduct(p._id)">
+    🗑 Delete
+  </button>
+
+<button class="excel-btn" (click)="downloadExcel()">
+  📊 Download Excel Report
+</button>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>

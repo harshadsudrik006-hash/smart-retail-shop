@@ -1,0 +1,120 @@
+/* PAGE */
+.container {
+  padding: 20px;
+  background: #f4f6fb;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+h2 {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ADD CARD */
+.add-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.add-card input,
+.add-card select {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  flex: 1;
+}
+
+/* BUTTONS */
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn {
+  background: #7b3fe4;
+  color: white;
+}
+
+.add-btn:hover {
+  background: #5a2fc2;
+}
+
+.edit {
+  background: #6c63ff;
+  color: white;
+}
+
+.edit:hover {
+  background: #5548e0;
+}
+
+.delete {
+  background: #ff4d4f;
+  color: white;
+}
+
+.delete:hover {
+  background: #d9363e;
+}
+
+.back-btn {
+  background: #6c757d;
+  color: white;
+}
+
+/* UPDATE BOX */
+.update-card {
+  background: #fff3cd;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+/* CARD */
+.sub-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sub-name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* ACTION BUTTONS */
+.actions {
+  display: flex;
+  justify-content: space-between;
+}

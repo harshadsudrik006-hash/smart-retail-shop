@@ -1,0 +1,25 @@
+<h2>🚚 Delivery Dashboard</h2>
+
+<div *ngFor="let o of orders" class="card">
+
+  <h3>Order: {{o._id}}</h3>
+  <p>Status: {{o.status}}</p>
+
+  <!-- 🔥 START TRACKING -->
+  <button (click)="startTracking(o)">
+    🚚 Start Tracking
+  </button>
+
+  <div *ngIf="o.status === 'Out for Delivery'">
+
+    <button (click)="sendOTP(o)">Send OTP</button>
+
+    <input [(ngModel)]="otpInputs[o._id]" placeholder="Enter OTP">
+
+    <button (click)="verifyOTP(o)">
+      Deliver
+    </button>
+
+  </div>
+
+</div>

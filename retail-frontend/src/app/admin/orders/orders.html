@@ -1,0 +1,109 @@
+<h2>Order Management</h2>
+
+<button class="back-btn" (click)="goBack()">← Back</button>
+
+<table>
+
+<thead>
+<tr>
+<th>Order ID</th>
+<th>User</th>
+<th>Total</th>
+<th>Status</th>
+<th>Delivery Boy</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr *ngFor="let o of orders">
+
+<td>{{o._id}}</td>
+
+<td>{{o.user?.name || 'No User'}}</td>
+
+<td>₹{{o.totalAmount}}</td>
+
+<!-- STATUS -->
+<td>
+
+  <!-- 🔒 LOCKED STATUS -->
+  <span *ngIf="o.status === 'Delivered'" class="delivered">
+    Delivered ✅
+  </span>
+
+  <span *ngIf="o.status === 'Cancelled'" class="cancelled">
+    Cancelled by {{o.cancelledBy || 'User'}} ❌
+  </span>
+
+  <!-- 🔄 ACTIVE STATUS -->
+  <select *ngIf="o.status !== 'Delivered' && o.status !== 'Cancelled'"
+          [(ngModel)]="o.status">
+
+    <option value="Pending">Pending</option>
+    <option value="Packed">Packed</option>
+    <option value="Shipped">Shipped</option>
+    <option value="Out for Delivery">Out for Delivery</option>
+    <option value="Delivered">Delivered</option>
+    <option value="Cancelled">Cancelled</option>
+
+  </select>
+
+</td>
+
+<!-- DELIVERY BOY -->
+<td>
+
+  <!-- 🔒 LOCKED -->
+  <span *ngIf="o.status === 'Delivered' || o.status === 'Cancelled'">
+    {{ o.deliveryBoy?.name || '—' }}
+  </span>
+
+  <!-- 🔄 ACTIVE -->
+  <select *ngIf="o.status !== 'Delivered' && o.status !== 'Cancelled'"
+          [(ngModel)]="o.deliveryBoy">
+
+    <option value="">Select Delivery Boy</option>
+
+    <option *ngFor="let d of deliveryBoys" [value]="d._id">
+      {{ d.name || d.email || 'No Name' }}
+    </option>
+
+  </select>
+
+</td>
+
+<!-- ACTION -->
+<td>
+
+  <!-- ✅ DELIVERED -->
+  <span *ngIf="o.status === 'Delivered'" class="delivered">
+    Delivered ✅
+  </span>
+
+  <!-- ❌ CANCELLED -->
+  <span *ngIf="o.status === 'Cancelled'" class="cancelled">
+    Cancelled by {{o.cancelledBy || 'User'}} ❌
+  </span>
+
+  <!-- 🔄 ACTIVE -->
+  <div *ngIf="o.status !== 'Delivered' && o.status !== 'Cancelled'">
+
+    <button (click)="updateStatus(o)">
+      Update
+    </button>
+
+    <button (click)="assignDelivery(o)">
+      Assign
+    </button>
+
+  </div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>

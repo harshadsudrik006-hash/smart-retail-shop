@@ -1,0 +1,136 @@
+h2{
+margin-bottom:15px;
+font-size:24px;
+font-weight:600;
+}
+
+/* Back Button */
+.back-btn{
+background:#6c757d;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:6px;
+cursor:pointer;
+margin-bottom:15px;
+}
+
+.back-btn:hover{
+background:#5a6268;
+}
+
+
+/* Table Container */
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+background:#ffffff;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Header */
+th{
+background:#7b3fe4;
+color:white;
+padding:14px;
+font-size:14px;
+text-transform:uppercase;
+letter-spacing:0.5px;
+}
+
+/* Table Cells */
+td{
+padding:12px;
+border-bottom:1px solid #f0f0f0;
+font-size:14px;
+}
+
+/* Row Hover */
+tr:hover{
+background:#f7f9ff;
+transition:0.2s;
+}
+
+
+/* Dropdown */
+select{
+padding:6px 8px;
+border-radius:5px;
+border:1px solid #ccc;
+outline:none;
+cursor:pointer;
+}
+
+/* Status Colors */
+option[value="Pending"]{color:orange;}
+option[value="Packed"]{color:#007bff;}
+option[value="Shipped"]{color:#6f42c1;}
+option[value="Out for Delivery"]{color:#17a2b8;}
+option[value="Delivered"]{color:green;}
+
+
+/* Buttons */
+button{
+padding:6px 12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-size:13px;
+margin:2px;
+}
+
+/* Update Button */
+button:first-child{
+background:#28a745;
+color:white;
+}
+
+button:first-child:hover{
+background:#218838;
+}
+
+/* Assign Button */
+button:last-child{
+background:#007bff;
+color:white;
+}
+
+button:last-child:hover{
+background:#0056b3;
+}
+
+
+/* Responsive */
+@media (max-width:768px){
+
+table{
+font-size:12px;
+}
+
+th, td{
+padding:8px;
+}
+
+select{
+font-size:12px;
+}
+
+button{
+padding:5px 8px;
+font-size:12px;
+}
+
+}
+
+.delivered{
+  color:green;
+  font-weight:600;
+}
+
+.cancelled{
+  color:red;
+  font-weight:600;
+}

@@ -1,0 +1,26 @@
+<h2>Edit Product</h2>
+
+<div class="form">
+
+   
+    <!-- Image Preview -->
+<img *ngIf="preview" [src]="preview" class="preview">
+
+<input type="file" (change)="onFileChange($event)">
+
+<input [(ngModel)]="name" placeholder="Product Name">
+
+<input type="number" [(ngModel)]="price" placeholder="Price">
+
+<input type="number" [(ngModel)]="stock" placeholder="Stock">
+
+
+
+<button (click)="update()">Update Product</button>
+
+    <button class="back-btn" (click)="goBack()">
+        ← Back
+    </button>
+
+
+</div>

@@ -1,0 +1,17 @@
+<h2>My Addresses</h2>
+
+<button routerLink="/add-address">+ Add New</button>
+
+<div *ngFor="let a of addresses" class="card">
+
+  <b>{{a.type}}</b>
+
+  <p>{{a.flat}}, {{a.building}}</p>
+  <p>{{a.floor}}</p>
+  <p>{{a.landmark}}</p>
+  <p>{{a.address}}</p>
+
+  <button (click)="editAddress(a)">Edit</button>
+  <button (click)="deleteAddress(a._id)">Delete</button>
+
+</div>

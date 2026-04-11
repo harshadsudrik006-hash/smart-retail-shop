@@ -1,0 +1,190 @@
+/* PAGE */
+.container {
+  padding: 20px;
+  background: #f4f6fb;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* BACK BUTTON */
+.back-btn {
+  background: #6c757d;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #5a6268;
+}
+
+/* SEARCH */
+.toolbar {
+  margin-bottom: 15px;
+}
+
+.toolbar input {
+  padding: 10px;
+  width: 260px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.toolbar input:focus {
+  border-color: #7b3fe4;
+}
+
+/* TABLE CARD */
+.table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* HEADER */
+thead {
+  background: linear-gradient(90deg, #7b3fe4, #5a2fc2);
+  color: white;
+}
+
+th {
+  padding: 14px;
+  text-align: left;
+  font-weight: 500;
+}
+
+/* BODY */
+td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+/* HOVER */
+tr:hover {
+  background: #f9f9ff;
+}
+
+/* NAME + AVATAR */
+.name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  background: #7b3fe4;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+/* BADGES */
+.badge {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
+}
+
+.google {
+  background: #4285f4;
+}
+
+.normal {
+  background: #6c757d;
+}
+
+/* ROLE SELECT */
+.role-select {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* BUTTONS */
+button {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* UPDATE */
+.update {
+  background: #28a745;
+  color: white;
+}
+
+.update:hover {
+  background: #218838;
+}
+
+/* DELETE */
+.delete {
+  background: #ff4d4f;
+  color: white;
+}
+
+.delete:hover {
+  background: #d9363e;
+}
+
+/* ALIGN */
+.center {
+  text-align: center;
+}
+
+/* EMPTY STATE */
+.empty {
+  padding: 20px;
+  color: #888;
+  font-weight: 500;
+}
+
+/* TOAST */
+.custom-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #333;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,53 @@
+<h2 class="page-title">Admin Dashboard</h2>
+
+<!-- STATS -->
+<div class="stats-container">
+
+  <div class="card gradient">
+    <h4>Total Users</h4>
+    <p>{{stats.users}}</p>
+  </div>
+
+  <div class="card gradient">
+    <h4>Total Orders</h4>
+    <p>{{stats.orders}}</p>
+  </div>
+
+  <div class="card gradient">
+    <h4>Total Revenue</h4>
+    <p>₹{{stats.revenue}}</p>
+  </div>
+
+</div>
+
+
+<!-- ADMIN ACTIONS -->
+<div class="admin-links">
+
+  <a routerLink="/admin/categories" class="action-btn">📂 Categories</a>
+  <a routerLink="/admin/subcategories" class="action-btn">📁 SubCategories</a>
+  <a routerLink="/admin/products" class="action-btn">📦 Products</a>
+  <a routerLink="/admin/users" class="action-btn">👤 Users</a>
+  <a routerLink="/admin/orders" class="action-btn">🧾 Orders</a>
+  <a routerLink="/admin/inventory" class="action-btn">📊 Inventory</a>
+
+</div>
+
+
+<!-- LOW STOCK -->
+<div *ngIf="lowStock.length > 0" class="alert-box">
+
+  <div class="alert-header">
+    ⚠ Low Stock Products
+  </div>
+
+  <div class="low-stock-list">
+
+    <div class="low-item" *ngFor="let p of lowStock">
+      <span class="name">{{p.name}}</span>
+      <span class="stock">{{p.stock}} left</span>
+    </div>
+
+  </div>
+
+</div>

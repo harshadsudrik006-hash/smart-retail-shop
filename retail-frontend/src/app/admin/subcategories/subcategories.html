@@ -1,0 +1,58 @@
+<div class="container">
+
+  <div class="header">
+    <h2>SubCategory Management</h2>
+    <button class="back-btn" (click)="goBack()">← Back</button>
+  </div>
+
+  <!-- ADD SECTION -->
+  <div class="add-card">
+
+    <select [(ngModel)]="selectedCategory">
+      <option value="">Select Category</option>
+      <option *ngFor="let c of categories" [value]="c._id">
+        {{c.name}}
+      </option>
+    </select>
+
+    <input
+      placeholder="Enter SubCategory Name"
+      [(ngModel)]="name"
+    />
+
+    <button class="add-btn" (click)="addSubCategory()">
+      + Add
+    </button>
+
+  </div>
+
+  <!-- UPDATE BOX -->
+  <div *ngIf="selectedSub" class="update-card">
+    <input [(ngModel)]="updatedSubName">
+    <button (click)="updateSubCategory()">Save</button>
+  </div>
+
+  <!-- LIST -->
+  <div class="grid">
+
+    <div class="sub-card" *ngFor="let sub of subcategories">
+
+      <div class="sub-name">
+        {{sub.name}}
+      </div>
+
+      <div class="actions">
+        <button class="edit" (click)="editSubCategory(sub)">
+          Update
+        </button>
+
+        <button class="delete" (click)="deleteSubCategory(sub._id)">
+          Delete
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

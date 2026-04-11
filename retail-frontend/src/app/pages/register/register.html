@@ -1,0 +1,39 @@
+<div class="auth-container">
+
+  <!-- LEFT SIDE (SAME STYLE AS LOGIN) -->
+  <div class="auth-left">
+
+    <div class="bg-img"></div>
+
+    <div class="content">
+      <h2>Create your account 🚀</h2>
+
+      <p>
+        Join Smart Retail and manage your shop smarter with smart tools
+      </p>
+
+      <!-- SAME IMAGE -->
+      <img src="/assets/ecommerce.png" class="cart-img">
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="auth-right">
+
+    <h2>Sign Up</h2>
+
+    <input placeholder="Name" [(ngModel)]="name">
+    <input placeholder="Email" [(ngModel)]="email">
+    <input type="password" placeholder="Password" [(ngModel)]="password">
+
+    <button (click)="register()">Register</button>
+
+    <p class="link">
+      Already have account?
+      <a routerLink="/login">Login</a>
+    </p>
+
+  </div>
+
+</div>

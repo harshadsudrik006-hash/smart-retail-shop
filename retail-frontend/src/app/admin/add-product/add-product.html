@@ -1,0 +1,45 @@
+<h2>Add Product</h2>
+
+<div class="form">
+
+<input placeholder="Product Name" [(ngModel)]="name">
+
+<input type="number" placeholder="Selling Price" [(ngModel)]="price">
+
+<input type="number" placeholder="Original Price" [(ngModel)]="originalPrice">
+
+<input placeholder="Weight (1kg, 500g)" [(ngModel)]="weight">
+
+<input type="number" placeholder="Stock" [(ngModel)]="stock">
+
+<textarea placeholder="Description" [(ngModel)]="description"></textarea>
+
+<!-- Category -->
+<select [(ngModel)]="category" (change)="loadSubCategories()">
+<option value="">Select Category</option>
+<option *ngFor="let c of categories" [value]="c._id">
+{{c.name}}
+</option>
+</select>
+
+<!-- SubCategory -->
+<select [(ngModel)]="subCategory">
+<option value="">Select SubCategory</option>
+<option *ngFor="let s of subcategories" [value]="s._id">
+{{s.name}}
+</option>
+</select>
+
+<!-- Image -->
+<input type="file" (change)="onFileChange($event)">
+
+<!-- 🔥 IMAGE PREVIEW -->
+<img *ngIf="preview" [src]="preview" class="preview">
+
+<button (click)="submit()">Add Product</button>
+
+<button class="back-btn" (click)="goBack()">
+← Back
+</button>
+
+</div>

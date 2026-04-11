@@ -1,0 +1,91 @@
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h2>User Management</h2>
+    <button class="back-btn" (click)="goBack()">← Back</button>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="toolbar">
+    <input 
+      type="text" 
+      placeholder="Search by name, email, role..."
+      [(ngModel)]="searchText"
+      (input)="onSearch()"
+    >
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Login</th>
+          <th>Role</th>
+          <th class="center">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let u of filteredUsers">
+
+          <!-- NAME + AVATAR -->
+          <td class="name">
+            <div class="avatar">
+              {{u.name?.charAt(0)}}
+            </div>
+            {{u.name}}
+          </td>
+
+          <!-- EMAIL -->
+          <td>{{u.email}}</td>
+
+          <!-- LOGIN -->
+          <td>
+            <span class="badge" [ngClass]="u.loginType">
+              {{u.loginType}}
+            </span>
+          </td>
+
+          <!-- ROLE -->
+          <td>
+            <select [(ngModel)]="u.role" class="role-select">
+              <option value="user">User</option>
+              <option value="manager">Manager</option>
+              <option value="staff">Staff</option>
+              <option value="delivery">Delivery</option>
+              <option value="admin">Admin</option>
+            </select>
+          </td>
+
+          <!-- ACTION -->
+          <td class="center">
+            <button class="update" (click)="updateRole(u)">
+              Update
+            </button>
+
+            <button class="delete" (click)="confirmDelete(u)">
+              Delete
+            </button>
+          </td>
+
+        </tr>
+
+        <!-- NO DATA -->
+        <tr *ngIf="filteredUsers.length === 0">
+          <td colspan="5" class="center empty">
+            No users found
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
