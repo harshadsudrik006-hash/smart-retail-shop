@@ -8,9 +8,12 @@ import { FormsModule } from '@angular/forms';
   standalone:true,
   imports:[CommonModule, FormsModule],
   templateUrl:'./checkout.html',
-  styleUrl:'./checkout.css'
+  styleUrls:['./checkout.css']   // ✅ FIXED
 })
 export class Checkout implements OnInit{
+
+  // ✅ GLOBAL API
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
 
   otp = "";
   otpSent = false;
@@ -49,14 +52,14 @@ export class Checkout implements OnInit{
   }
 
   loadAddresses(){
-    this.http.get("http://localhost:5000/api/address", this.getHeaders())
+    this.http.get(`${this.API}/address`, this.getHeaders())   // ✅ FIXED
       .subscribe((res:any)=>{
         this.addresses = res;
       });
   }
 
   loadCartTotal(){
-    this.http.get("http://localhost:5000/api/cart", this.getHeaders())
+    this.http.get(`${this.API}/cart`, this.getHeaders())   // ✅ FIXED
       .subscribe((res:any)=>{
         let total = 0;
 
@@ -71,7 +74,7 @@ export class Checkout implements OnInit{
 
   applyBestCoupon(){
     this.http.post(
-      "http:///api/coupons/best",
+      `${this.API}/coupons/best`,   // ✅ FIXED (was broken URL)
       { cartTotal:this.cartTotal },
       this.getHeaders()
     ).subscribe({
@@ -143,11 +146,11 @@ export class Checkout implements OnInit{
 
     const amount = this.getFinalAmount();
 
-    this.http.get("http://localhost:5000/api/payment/key")
+    this.http.get(`${this.API}/payment/key`)   // ✅ FIXED
       .subscribe((keyRes:any)=>{
 
         this.http.post(
-          "http://localhost:5000/api/payment/create",
+          `${this.API}/payment/create`,   // ✅ FIXED
           { amount },
           this.getHeaders()
         ).subscribe((orderRes:any)=>{
@@ -182,7 +185,7 @@ export class Checkout implements OnInit{
     const amount = this.getFinalAmount();
 
     this.http.post(
-      "http://localhost:5000/api/payment/qr",
+      `${this.API}/payment/qr`,   // ✅ FIXED
       { amount },
       this.getHeaders()
     ).subscribe((res:any)=>{
@@ -200,7 +203,7 @@ export class Checkout implements OnInit{
 
   sendOTP(){
     this.http.post(
-      "http://localhost:5000/api/orders/send-otp",
+      `${this.API}/orders/send-otp`,   // ✅ FIXED
       {},
       this.getHeaders()
     ).subscribe(()=>{
@@ -228,7 +231,7 @@ export class Checkout implements OnInit{
     }
 
     this.http.post(
-      "http://localhost:5000/api/orders/place",
+      `${this.API}/orders/place`,   // ✅ FIXED
       {
         otp:this.otp,
         addressId:this.selectedAddress._id,

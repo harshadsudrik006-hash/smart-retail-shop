@@ -9,11 +9,11 @@ import { io } from "socket.io-client";
   standalone:true,
   imports:[CommonModule, RouterLink],
   templateUrl:'./my-orders.html',
-  styleUrl:'./my-orders.css'
+  styleUrls:['./my-orders.css']   // ✅ FIXED
 })
 export class MyOrders implements OnInit, OnDestroy{
 
-  // ✅ ADDED (GLOBAL API)
+  // ✅ GLOBAL API (base without /api for socket)
   API = "https://smart-retail-shop-major-project.onrender.com";
 
   orders:any[]=[];
@@ -25,9 +25,7 @@ export class MyOrders implements OnInit, OnDestroy{
 
   ngOnInit(){
     this.loadOrders();
-
-    // ❌ OLD
-    // this.socket = io("http://localhost:5000");
+    
 
     // ✅ UPDATED
     this.socket = io(this.API);
@@ -52,28 +50,32 @@ export class MyOrders implements OnInit, OnDestroy{
 
   loadOrders(){
 
-    this.loading = true; // ✅ START LOADING
+    this.loading = true;
 
+
+    // ✅ UPDATED
     this.http.get(
-      `${this.API}/api/orders/my-orders`,   // ✅ FIXED
+      `${this.API}/api/orders/my-orders`,
       { headers: this.getHeaders() }
     ).subscribe({
       next:(res:any)=>{
         this.orders = res || [];
-        this.loading = false; // ✅ STOP LOADING
+        this.loading = false;
       },
       error:(err)=>{
         console.log("❌ Error loading orders:", err);
         this.orders = [];
-        this.loading = false; // ✅ STOP EVEN ON ERROR
+        this.loading = false;
       }
     });
 
   }
 
   downloadInvoice(id:any){
+
+    // ✅ UPDATED
     window.open(
-      `${this.API}/api/orders/invoice/${id}`,   // ✅ FIXED
+      `${this.API}/api/orders/invoice/${id}`,
       "_blank"
     );
   }

@@ -5,10 +5,14 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector:'app-profile-address',
+  standalone:true,   // ✅ ADDED (important)
   imports: [CommonModule],
   templateUrl:'./profile-address.html'
 })
 export class ProfileAddress implements OnInit{
+
+  // ✅ ADDED GLOBAL API
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
 
   addresses:any[] = [];
 
@@ -22,7 +26,8 @@ export class ProfileAddress implements OnInit{
 
     const token = localStorage.getItem("token");
 
-    this.http.get("http://localhost:5000/api/address",{
+    // ✅ UPDATED
+    this.http.get(`${this.API}/address`,{
       headers:{ Authorization:`Bearer ${token}` }
     }).subscribe((res:any)=>{
       this.addresses = res;
@@ -33,15 +38,17 @@ export class ProfileAddress implements OnInit{
 
     const token = localStorage.getItem("token");
 
+ 
+    // ✅ UPDATED
     this.http.delete(
-      `http://localhost:5000/api/address/${id}`,
+      `${this.API}/address/${id}`,
       {headers:{ Authorization:`Bearer ${token}` }}
     ).subscribe(()=>{
       this.getAddresses();
     });
   }
 
-  // 🔥 FIXED EDIT
+  // 🔥 FIXED EDIT (unchanged)
   editAddress(a:any){
 
     localStorage.setItem("editAddress", JSON.stringify(a));
