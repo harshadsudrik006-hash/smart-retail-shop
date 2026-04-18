@@ -105,4 +105,20 @@ goBack(){
     window.history.back();
 }
 
+markAsPaid(order:any){
+
+const headers = new HttpHeaders({
+  Authorization:`Bearer ${localStorage.getItem("token")}`
+});
+
+this.http.put(
+`http://localhost:5000/api/orders/payment/${order._id}`,
+{},
+{ headers }
+).subscribe(()=>{
+  alert("Payment marked as received ✅");
+  this.loadOrders();
+});
+}
+
 }

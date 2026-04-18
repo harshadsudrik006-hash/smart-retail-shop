@@ -55,25 +55,42 @@
         <div class="order-bottom" *ngIf="o">
   <h3>Total ₹{{o.totalAmount}}</h3>
 
-  <div class="actions">
+<div class="actions">
+
+  <!-- ✅ SHOW ONLY WHEN NOT CANCELLED -->
+  <ng-container *ngIf="o.status !== 'Cancelled'; else cancelledBlock">
 
     <button (click)="repeatOrder(o._id)">
       Repeat
     </button>
 
-    <!-- 🔥 NEW TRACK BUTTON -->
     <button class="track-btn" (click)="trackOrder(o._id)">
       Track
     </button>
 
     <button 
-      *ngIf="o.status !== 'Delivered' && o.status !== 'Cancelled'"
+      *ngIf="o.status !== 'Delivered'"
       class="cancel-btn"
       (click)="cancelOrder(o._id)">
       Cancel
     </button>
 
-  </div>
+  </ng-container>
+
+  <!-- ❌ CANCELLED UI -->
+  <ng-template #cancelledBlock>
+
+    <span class="cancel-text" *ngIf="o.cancelledBy === 'user'">
+      ❌ Cancelled by User
+    </span>
+
+    <span class="cancel-text" *ngIf="o.cancelledBy === 'admin'">
+      ❌ Cancelled by Admin
+    </span>
+
+  </ng-template>
+
+</div>
 
 </div>
 

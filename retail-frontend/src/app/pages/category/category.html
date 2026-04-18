@@ -31,12 +31,10 @@
     <!-- PRODUCTS -->
     <div class="products">
 
+      <!-- ✅ FIXED (NO COMMENT INSIDE TAG) -->
       <div class="product-card"
         *ngFor="let p of products"
-        [class.out]="!p.stock || +p.stock <= 0">
-
-        <!-- 🔥 DELIVERY TAG
-        <div class="delivery">⏱ 8 MINS</div> -->
+        [class.out]="(p.stock - (p.reservedStock || 0)) <= 0">
 
         <!-- 🔥 DISCOUNT -->
         <div class="discount" *ngIf="p.originalPrice">
@@ -49,7 +47,7 @@
           <img [src]="p.image">
 
           <!-- 🔥 OUT OF STOCK -->
-          <div *ngIf="!p.stock || +p.stock <= 0" class="badge">
+          <div *ngIf="(p.stock - (p.reservedStock || 0)) <= 0" class="badge">
             Out of Stock
           </div>
 
@@ -67,21 +65,39 @@
           <span class="old" *ngIf="p.originalPrice">₹{{p.originalPrice}}</span>
         </div>
 
-        <!-- 🔥 ADD BUTTON UPDATED -->
+        <!-- 🔴 OUT OF STOCK BUTTON -->
         <button 
-          *ngIf="!quantities[p._id]" 
-          (click)="add(p)" 
+          *ngIf="(p.stock - (p.reservedStock || 0)) <= 0"
           class="add-btn"
-          [disabled]="!p.stock || +p.stock <= 0"
-        >
-          {{ (!p.stock || +p.stock <= 0) ? 'Out of Stock' : 'ADD' }}
+          disabled>
+          Out of Stock
         </button>
 
-        <!-- QTY -->
+        <!-- 🟢 ADD BUTTON -->
+        <button 
+          *ngIf="!quantities[p._id] && (p.stock - (p.reservedStock || 0)) > 0" 
+          (click)="add(p)" 
+          class="add-btn">
+          ADD
+        </button>
+
+        <!-- 🟡 QTY -->
         <div class="qty-box" *ngIf="quantities[p._id]">
+
           <button (click)="decrease(p)">-</button>
-          <span>{{quantities[p._id]}}</span>
-          <button (click)="increase(p)">+</button>
+
+          <span>
+            {{ quantities[p._id] > (p.stock - (p.reservedStock || 0)) 
+              ? (p.stock - (p.reservedStock || 0)) 
+              : quantities[p._id] }}
+          </span>
+
+          <button 
+            *ngIf="quantities[p._id] < (p.stock - (p.reservedStock || 0))"
+            (click)="increase(p)">
+            +
+          </button>
+
         </div>
 
       </div>

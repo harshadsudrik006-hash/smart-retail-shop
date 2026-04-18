@@ -3,21 +3,87 @@
 <div *ngFor="let o of orders" class="card">
 
   <h3>Order: {{o._id}}</h3>
-  <p>Status: {{o.status}}</p>
 
-  <!-- 🔥 START TRACKING -->
+  <p><strong>Status:</strong> {{o.status}}</p>
+
+  <!-- 💰 TOTAL AMOUNT -->
+  <p><strong>Total Amount:</strong> ₹{{ o.totalAmount }}</p>
+
+  <!-- 💳 PAYMENT -->
+  <p>
+    <strong>Payment:</strong> 
+    {{ o.paymentMethod === 'cod' ? 'Cash' : 'UPI' }}
+  </p>
+
+  <!-- 📊 PAYMENT STATUS -->
+  <p>
+    <strong>Payment Status:</strong>
+    <span *ngIf="o.paymentStatus === 'paid'" style="color:green;">
+      Paid ✅
+    </span>
+    <span *ngIf="o.paymentStatus === 'pending'" style="color:orange;">
+      Pending ⏳
+    </span>
+  </p>
+
+  <!-- 📅 ORDER TIME -->
+  <p>
+    <strong>Order Time:</strong> 
+    {{ o.createdAt | date:'dd/MM/yyyy hh:mm a' }}
+  </p>
+
+  <!-- 🚚 DELIVERY TIME -->
+  <p>
+    <strong>Delivery Time:</strong>
+    <span *ngIf="o.deliveredAt">
+      {{ o.deliveredAt | date:'dd/MM/yyyy hh:mm a' }}
+    </span>
+    <span *ngIf="!o.deliveredAt">—</span>
+  </p>
+
+  <!-- 🚚 START TRACKING -->
   <button (click)="startTracking(o)">
     🚚 Start Tracking
   </button>
 
-  <div *ngIf="o.status === 'Out for Delivery'">
+  <!-- 🔥 DELIVERY OTP PROCESS -->
+  <div *ngIf="o.status === 'Out for Delivery'" 
+       style="border:1px solid #ddd; padding:10px; margin-top:10px; border-radius:8px;">
 
-    <button (click)="sendOTP(o)">Send OTP</button>
+    <p><strong>🔐 Delivery OTP Verification</strong></p>
 
-    <input [(ngModel)]="otpInputs[o._id]" placeholder="Enter OTP">
+    <!-- SEND OTP -->
+    <button (click)="sendOTP(o)">
+      Send OTP
+    </button>
 
+    <!-- ENTER OTP -->
+    <input 
+      [(ngModel)]="otpInputs[o._id]" 
+      placeholder="Enter OTP"
+      style="margin:5px;"
+    >
+
+    <!-- VERIFY OTP -->
     <button (click)="verifyOTP(o)">
-      Deliver
+      ✅ Confirm Delivery
+    </button>
+
+  </div>
+
+  <!-- 💰 CASH COLLECTION -->
+  <div *ngIf="o.paymentMethod === 'cod' && o.paymentStatus === 'pending'"
+       style="margin-top:10px;">
+
+    <p style="color:red;">
+      💵 Collect ₹{{ o.totalAmount }} from customer
+    </p>
+
+    <button 
+      (click)="markPaid(o)"
+      style="background:green; color:white;"
+    >
+      💰 Cash Received
     </button>
 
   </div>

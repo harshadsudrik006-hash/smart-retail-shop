@@ -19,20 +19,69 @@
     </div>
   </div>
 
-  <!-- BILL -->
+  <!-- 🔥 BILL (UPDATED) -->
   <div class="bill-box">
-    <h3>🧾 Bill</h3>
+    <h3>🧾 Bill Summary</h3>
 
-    <div>Subtotal: ₹{{cartTotal}}</div>
+    <div class="row">
+      <span>Subtotal</span>
+      <span>₹{{cartTotal}}</span>
+    </div>
 
-    <div *ngIf="discount > 0">
-      Coupon: -₹{{discount}}
+    <div class="row" *ngIf="discount > 0">
+      <span>Coupon</span>
+      <span class="discount">-₹{{discount}}</span>
+    </div>
+
+    <!-- 🔥 POINTS -->
+    <div class="row" *ngIf="usePoints && getUsedPoints() > 0">
+      <span>Wallet Points</span>
+      <span class="discount">-₹{{getUsedPoints()}}</span>
+    </div>
+
+    <!-- 🔥 DELIVERY -->
+    <div class="row">
+      <span>Delivery</span>
+      <span class="discount">
+        {{ cartTotal > 500 ? 'FREE 🎉' : '₹40' }}
+      </span>
     </div>
 
     <hr>
 
-    <div>Total: ₹{{getFinalAmount()}}</div>
+    <!-- 🔥 SAVINGS -->
+    <div class="row discount" *ngIf="discount || getUsedPoints()">
+      <span>You Saved</span>
+      <span>
+        ₹{{ (discount || 0) + getUsedPoints() }}
+      </span>
+    </div>
+
+    <!-- 🔥 FINAL -->
+    <div class="row total">
+      <span>Total</span>
+      <span>₹{{getFinalAmount()}}</span>
+    </div>
   </div>
+
+<!-- WALLET -->
+<div class="points-box">
+
+  <label>
+    <input 
+      type="checkbox"
+      [(ngModel)]="usePoints"
+      [disabled]="!canUsePoints()"
+    >
+    Use Wallet Points (₹{{userPoints}})
+  </label>
+
+  <!-- 🔥 VALIDATION MESSAGE -->
+  <small *ngIf="!canUsePoints()" style="color:red;">
+    Minimum ₹100 cart & 100 points required ❌
+  </small>
+
+</div>
 
   <!-- PAYMENT -->
   <div class="payment-box">
@@ -54,12 +103,15 @@
     </label>
   </div>
 
-  <!-- BUTTON -->
-  <button (click)="proceed()">
+  <!-- 🔥 BUTTON UPDATED -->
+  <!-- <button class="pay-btn" (click)="proceed()">
     Continue ₹{{getFinalAmount()}}
-  </button>
-
-  <!-- 🔥 QR -->
+  </button> -->
+  
+  <button class="pay-btn" (click)="proceed()">
+  Continue ₹{{getFinalAmount()}}
+</button>
+  <!-- QR -->
   <div *ngIf="paymentMethod==='qr' && qrImage">
     <h3>Scan & Pay</h3>
     <img [src]="qrImage" width="200">
@@ -67,17 +119,23 @@
   </div>
 
   <!-- OTP -->
-  <div *ngIf="otpSent">
-    <h3>Enter OTP</h3>
+  <div *ngIf="otpSent" class="otp-container">
 
-    <input maxlength="1" (input)="moveNext($event,1)">
-    <input maxlength="1" (input)="moveNext($event,2)">
-    <input maxlength="1" (input)="moveNext($event,3)">
-    <input maxlength="1" (input)="moveNext($event,4)">
-    <input maxlength="1" (input)="moveNext($event,5)">
-    <input maxlength="1" (input)="moveNext($event,6)">
+    <h3 class="otp-title">🔐 Enter OTP</h3>
 
-    <button (click)="placeOrder()">Confirm</button>
+    <div class="otp-inputs">
+      <input maxlength="1" (input)="moveNext($event,1)">
+      <input maxlength="1" (input)="moveNext($event,2)">
+      <input maxlength="1" (input)="moveNext($event,3)">
+      <input maxlength="1" (input)="moveNext($event,4)">
+      <input maxlength="1" (input)="moveNext($event,5)">
+      <input maxlength="1" (input)="moveNext($event,6)">
+    </div>
+
+    <button class="confirm-btn" (click)="placeOrder()">
+      Confirm Order
+    </button>
+
   </div>
 
 </div>

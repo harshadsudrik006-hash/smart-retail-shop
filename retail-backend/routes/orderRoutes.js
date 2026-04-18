@@ -20,7 +20,8 @@ const {
   cancelOrder,
   downloadInvoice,
   adminCancelOrder,
-  updateDeliveryLocation
+  updateDeliveryLocation,
+updatePaymentStatus
 } = require("../controllers/orderController");
 
 // =======================
@@ -53,6 +54,7 @@ router.put(
 
 // ✅ DELIVERY BOYS (IMPORTANT - BEFORE /:id)
 router.get("/delivery-boys", authMiddleware, getDeliveryBoys);
+router.put("/payment/:id", authMiddleware, updatePaymentStatus);
 
 // Assign Delivery
 router.put(

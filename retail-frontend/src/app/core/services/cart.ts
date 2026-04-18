@@ -8,7 +8,7 @@ export class CartService {
 
   cartKey = "cart";
 
-  // 🔥 LIVE COUNT
+  // 🔥 LIVE COUNT (kept, but now controlled properly)
   private cartCount = new BehaviorSubject<number>(this.getCart().length);
   cartCount$ = this.cartCount.asObservable();
 
@@ -52,6 +52,11 @@ export class CartService {
     });
 
     return total;
+  }
+
+  // ✅ NEW: BACKEND SYNC METHOD
+  updateCartCountFromBackend(count:number){
+    this.cartCount.next(count);
   }
 
 }

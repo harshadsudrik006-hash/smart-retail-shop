@@ -125,74 +125,85 @@
 }
 
 /* OTP */
-.otp-container{
-  text-align:center;
-  margin-top:25px;
+/* 🔥 OTP SECTION (MODERN UI) */
+.otp-container {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.otp-inputs{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin:15px 0;
+.otp-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
-.otp-inputs input{
-  width:50px;
-  height:50px;
-  text-align:center;
-  font-size:18px;
-  border:2px solid #ddd;
-  border-radius:10px;
+/* OTP BOXES */
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
 }
 
-.otp-inputs input:focus{
-  border-color:#28a745;
+/* INPUT STYLE */
+.otp-inputs input {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+  text-align: center;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.2s ease;
+  background: #f9f9f9;
 }
 
-.confirm-btn{
-  padding:10px 20px;
-  background:#28a745;
-  color:white;
-  border:none;
-  border-radius:8px;
+/* FOCUS EFFECT */
+.otp-inputs input:focus {
+  border-color: #28a745;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(40, 167, 69, 0.3);
 }
 
-.qr-box{
-  text-align:center;
-  margin-top:25px;
-  padding:20px;
-  border-radius:12px;
-  background:#f8f9ff;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+/* ACTIVE FILLED LOOK */
+.otp-inputs input:not(:placeholder-shown) {
+  border-color: #28a745;
 }
 
-.qr-img{
-  width:220px;
-  margin:10px 0;
-  border-radius:10px;
+/* BUTTON */
+.confirm-btn {
+  margin-top: 10px;
+  padding: 12px 25px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.upi{
-  font-size:14px;
-  color:#555;
+/* HOVER */
+.confirm-btn:hover {
+  background: #218838;
+  transform: scale(1.03);
 }
 
-.amount{
-  font-weight:600;
+/* 🔥 BETTER BILL UI */
+.bill-box h3{
   margin-bottom:10px;
 }
 
-.confirm-btn{
-  padding:10px 20px;
-  background:#28a745;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.2s;
+.bill-box .row{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+  font-size:14px;
 }
 
-.confirm-btn:hover{
-  background:#218838;
+.total{
+  font-size:18px;
+  font-weight:bold;
+  color:#28a745;
 }

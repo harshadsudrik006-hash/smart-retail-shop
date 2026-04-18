@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 🔥 ADD
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,7 @@ export class Navbar implements OnInit {
     private productService:ProductService,
     private cartService:CartService,
     private http:HttpClient,
-    private cd: ChangeDetectorRef   // 🔥 ADD
+    private cd: ChangeDetectorRef
   ){}
 
   ngOnInit(){
@@ -40,19 +40,17 @@ export class Navbar implements OnInit {
       this.role = u?.role || '';
     });
 
-    // 🔥 KEEP (but ignore)
+    // ✅ FIXED: Now it listens properly
     this.cartService.cartCount$.subscribe(count=>{
-      // ignore local cart
+      this.cartCount = count;
     });
 
-    // 🔥 LOAD INITIAL COUNT
+    // 🔥 INITIAL LOAD
     this.loadCartCount();
 
-    // 🔥 LISTEN EVENT (REAL-TIME FIX)
+    // 🔥 EVENT LISTENER
     window.addEventListener('cartUpdated', ()=>{
       this.loadCartCount();
-
-      // 🔥 FORCE UI UPDATE
       this.cd.detectChanges();
     });
 
@@ -85,14 +83,15 @@ export class Navbar implements OnInit {
 
       this.cartCount = count;
 
-      // 🔥 FORCE UPDATE (important)
+      // ✅ IMPORTANT SYNC
+      this.cartService.updateCartCountFromBackend(count);
+
       this.cd.detectChanges();
 
     });
 
   }
 
-  // 🔍 SEARCH
   search(){
     if(!this.searchText.trim()) return;
 
@@ -101,7 +100,6 @@ export class Navbar implements OnInit {
     });
   }
 
-  // 📸 IMAGE SEARCH
   onImageSearch(event:any){
     const file = event.target.files[0];
     if(!file) return;

@@ -9,6 +9,13 @@
 <th>Order ID</th>
 <th>User</th>
 <th>Total</th>
+
+<!-- 🔥 NEW -->
+<th>Payment</th>
+<th>Payment Status</th>
+<th>Order Time</th>
+<th>Delivery Time</th>
+
 <th>Status</th>
 <th>Delivery Boy</th>
 <th>Action</th>
@@ -25,19 +32,57 @@
 
 <td>₹{{o.totalAmount}}</td>
 
+<!-- 🔥 NEW PAYMENT METHOD -->
+<td>
+  {{ o.paymentMethod === 'cod' ? 'Cash' : 'UPI' }}
+</td>
+
+<!-- 🔥 NEW PAYMENT STATUS -->
+<td>
+  <span *ngIf="o.paymentStatus === 'paid'" style="color:green;">
+    Paid ✅
+  </span>
+
+  <span *ngIf="o.paymentStatus === 'pending'" style="color:orange;">
+    Pending ⏳
+  </span>
+</td>
+
+<!-- 🔥 NEW ORDER TIME -->
+<td>
+  {{ o.createdAt | date:'dd/MM/yyyy hh:mm a' }}
+</td>
+
+<!-- 🔥 NEW DELIVERY TIME -->
+<td>
+  <span *ngIf="o.deliveredAt">
+    {{ o.deliveredAt | date:'dd/MM/yyyy hh:mm a' }}
+  </span>
+
+  <span *ngIf="!o.deliveredAt">
+    —
+  </span>
+</td>
+
 <!-- STATUS -->
 <td>
 
-  <!-- 🔒 LOCKED STATUS -->
+  <!-- 🔒 DELIVERED -->
   <span *ngIf="o.status === 'Delivered'" class="delivered">
     Delivered ✅
   </span>
 
+  <!-- ❌ CANCELLED -->
   <span *ngIf="o.status === 'Cancelled'" class="cancelled">
-    Cancelled by {{o.cancelledBy || 'User'}} ❌
+    Cancelled by 
+    {{ 
+      o.cancelledBy === 'admin' ? 'Admin' : 
+      o.cancelledBy === 'user' ? 'User' : 
+      'User' 
+    }} ❌
   </span>
 
-  <!-- 🔄 ACTIVE STATUS -->
+  <!-- 🔄 ACTIVE -->
   <select *ngIf="o.status !== 'Delivered' && o.status !== 'Cancelled'"
           [(ngModel)]="o.status">
 
@@ -84,7 +129,12 @@
 
   <!-- ❌ CANCELLED -->
   <span *ngIf="o.status === 'Cancelled'" class="cancelled">
-    Cancelled by {{o.cancelledBy || 'User'}} ❌
+    Cancelled by 
+    {{ 
+      o.cancelledBy === 'admin' ? 'Admin' : 
+      o.cancelledBy === 'user' ? 'User' : 
+      'User' 
+    }} ❌
   </span>
 
   <!-- 🔄 ACTIVE -->
@@ -97,6 +147,15 @@
     <button (click)="assignDelivery(o)">
       Assign
     </button>
+
+    <!-- 💰 MARK AS PAID BUTTON -->
+<button 
+  *ngIf="o.paymentMethod === 'cod' && o.paymentStatus === 'pending'"
+  (click)="markAsPaid(o)"
+  style="background:orange; color:white; margin-left:5px;"
+>
+  payment received
+</button>
 
   </div>
 

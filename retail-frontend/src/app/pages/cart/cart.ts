@@ -40,17 +40,32 @@ export class Cart implements OnInit{
     });
   }
 
-  increaseQty(item:any){
+increaseQty(item:any){
 
-    this.http.post(
-      "http://localhost:5000/api/cart/add",
-      {
-        productId:item.product._id,
-        quantity:1
-      },
-      this.getHeaders()
-    ).subscribe(()=>this.loadCart());
+  // 🔥 FRONTEND CHECK
+  if(item.quantity >= item.product.stock){
+    alert(`Only ${item.product.stock} items available ❌`);
+    return;
   }
+
+  this.http.post(
+    "http://localhost:5000/api/cart/add",
+    {
+      productId:item.product._id,
+      quantity:1
+    },
+    this.getHeaders()
+  ).subscribe({
+
+    next: () => this.loadCart(),
+
+    // 🔥 HANDLE BACKEND ERROR
+    error: (err) => {
+      alert(err.error?.message || "Out of Stock ❌");
+    }
+
+  });
+}
 
   decreaseQty(item:any){
 

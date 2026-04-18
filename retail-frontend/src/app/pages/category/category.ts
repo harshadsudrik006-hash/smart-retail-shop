@@ -36,13 +36,11 @@ export class Category implements OnInit{
 
       this.selectedCategoryId = categoryId;
 
-      // Load categories (LEFT MENU)
       this.http.get("http://localhost:5000/api/categories")
       .subscribe((res:any)=>{
         this.categories = res;
       });
 
-      // Load subcategories
       this.loadSubCategories(categoryId);
 
     });
@@ -56,9 +54,9 @@ export class Category implements OnInit{
       this.subcategories = res;
 
       if(res.length > 0){
-        this.selectSub(res[0]); // default first
+        this.selectSub(res[0]);
       }else{
-        this.products = []; // no subcategory
+        this.products = [];
       }
 
     });
@@ -71,12 +69,24 @@ export class Category implements OnInit{
 
     this.http.get(`http://localhost:5000/api/products/subcategory/${sub._id}`)
     .subscribe((res:any)=>{
+
       this.products = res;
+
+      this.products.forEach((p:any) => {
+
+        const available = (p.stock || 0) - (p.reservedStock || 0);
+        const currentQty = this.quantities[p._id] || 0;
+
+        if(currentQty > available){
+          this.quantities[p._id] = available;
+        }
+
+      });
+
     });
 
   }
 
-  // 🔥 FIXED CATEGORY SWITCH
   changeCategory(cat:any){
 
     this.selectedCategoryId = cat._id;
@@ -94,59 +104,118 @@ export class Category implements OnInit{
   }
 
   /* 🛒 CART */
+
   add(p:any){
+
+    const available = (p.stock || 0) - (p.reservedStock || 0);
+
+    if(available <= 0){
+      alert("Out of stock ❌");
+      return;
+    }
+
     this.quantities[p._id] = 1;
+
+    // 🔥 send +1
     this.addToCart(p, 1);
   }
 
   increase(p:any){
-    this.quantities[p._id]++;
-    this.addToCart(p, this.quantities[p._id]);
+
+    const available = (p.stock || 0) - (p.reservedStock || 0);
+    const currentQty = this.quantities[p._id] || 0;
+
+    if(currentQty >= available){
+      alert(`Only ${available} items available ❌`);
+      return;
+    }
+
+    // 🔥 UI update
+    this.quantities[p._id] = currentQty + 1;
+
+    // 🔥 send +1 only
+    this.addToCart(p, 1);
   }
 
   decrease(p:any){
-    if(this.quantities[p._id] > 1){
-      this.quantities[p._id]--;
-      this.addToCart(p, this.quantities[p._id]);
+
+    const currentQty = this.quantities[p._id] || 0;
+
+    if(currentQty > 1){
+
+      // 🔥 UI update
+      this.quantities[p._id] = currentQty - 1;
+
+      // 🔥 send -1 only
+      this.addToCart(p, -1);
+
     }else{
+
       delete this.quantities[p._id];
       this.removeFromCart(p);
+
     }
   }
 
-  // 🔥 NEW: LOGIN CHECK FUNCTION
   isLoggedIn(): boolean {
     return !!localStorage.getItem("token");
   }
-addToCart(product:any, quantity:number){
 
-  // ❌ NOT LOGGED IN
-  if (!this.isLoggedIn()) {
-    const confirmLogin = confirm("Please login first");
+  addToCart(product:any, quantity:number){
 
-    if (confirmLogin) {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: this.router.url }
-      });
+    if (!this.isLoggedIn()) {
+      const confirmLogin = confirm("Please login first");
+
+      if (confirmLogin) {
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: this.router.url }
+        });
+      }
+
+      return;
     }
 
-    return; // STOP execution
+    const available = (product.stock || 0) - (product.reservedStock || 0);
+
+    if (quantity > 0 && quantity > available) {
+      alert(`Only ${available} items available ❌`);
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    this.http.post(
+      "http://localhost:5000/api/cart/add",
+      {
+        productId: product._id,
+        quantity: quantity   // 🔥 IMPORTANT: delta only
+      },
+      { headers }
+    ).subscribe({
+
+      next: () => {
+
+        // 🔥 sync navbar count
+        window.dispatchEvent(new Event('cartUpdated'));
+
+      },
+
+      error: (err) => {
+
+        console.log("Cart Error:", err);
+
+        alert(
+          err?.error?.message ||
+          `Only ${available} items available ❌`
+        );
+      }
+
+    });
   }
-
-  // ✅ LOGGED IN
-  const token = localStorage.getItem("token");
-
-  const headers = new HttpHeaders({
-    Authorization:`Bearer ${token}`
-  });
-
-  this.http.post("http://localhost:5000/api/cart/add",
-  {
-    productId: product._id,
-    quantity: quantity
-  },
-  { headers }).subscribe();
-}
 
   removeFromCart(product:any){
 
@@ -159,7 +228,19 @@ addToCart(product:any, quantity:number){
     this.http.delete(
       `http://localhost:5000/api/cart/${product._id}`,
       { headers }
-    ).subscribe();
+    ).subscribe(()=>{
+
+      window.dispatchEvent(new Event('cartUpdated'));
+
+    });
+  }
+
+  isOutOfStock(p:any){
+    return (p.stock - (p.reservedStock || 0)) <= 0;
+  }
+  
+  isMaxReached(p:any){
+    return this.quantities[p._id] >= (p.stock - (p.reservedStock || 0));
   }
 
 }

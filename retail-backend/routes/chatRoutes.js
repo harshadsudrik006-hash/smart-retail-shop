@@ -9,7 +9,7 @@ const SubCategory = require("../models/SubCategory");
    🧠 INTENT DETECTION
 ========================= */
 function detectIntent(msg) {
-  if (/^(hi|hello|hey|hii)$/.test(msg)) return "greet";
+  if (/^(hi|hello|hey|hii)$/i.test(msg)) return "greet";
   if (msg.includes("help")) return "help";
   if (msg.match(/cheap|budget|low/)) return "cheap";
   if (msg.match(/\d+/)) return "budget";
@@ -17,6 +17,10 @@ function detectIntent(msg) {
   if (msg.includes("order")) return "order";
   if (msg.includes("payment") || msg.includes("pay")) return "payment";
   if (msg.includes("category") || msg.includes("items")) return "category";
+  if (msg.match(/best|top|recommended/)) return "recommend";
+  if (msg.match(/offer|deal|discount/)) return "deal";
+  if (msg.match(/milk|bread|egg|daily/)) return "daily";
+  if (msg.includes("not found") || msg.includes("not finding")) return "retry";
   return "search";
 }
 
@@ -24,13 +28,12 @@ function detectIntent(msg) {
    🧠 DATA EXTRACTION
 ========================= */
 function extractData(msg) {
-  const priceMatch = msg.match(/\d+/);
+  const priceMatch = msg.match(/(\d+)/);
   const price = priceMatch ? parseInt(priceMatch[0]) : null;
 
-  // remove useless words
   let keyword = msg
     .replace(/\d+/g, "")
-    .replace(/(show|me|i|want|need|find|search|for|the|not|finding)/g, "")
+    .replace(/(under|below|rupees|rs|show|me|i|want|need|find|search|for|the|not|finding)/g, "")
     .trim();
 
   return { keyword, price };
@@ -54,7 +57,21 @@ router.post("/", async (req, res) => {
       return res.json({
         type: "text",
         reply:
-           "Hey 👋 How can I help you today?"//\n\nTry:\n• rice\n• oil\n• cheap products\n• under 300"
+`👋 Hey there!
+
+I’m your Smart Shopping Assistant 🛒
+
+I can help you:
+• Find products 🔍
+• Suggest deals 💸
+• Shop by budget 💰
+
+👉 Try:
+• "rice under 200"
+• "cheap snacks"
+• "best oil"
+
+What do you want today? 😊`
       });
     }
 
@@ -65,12 +82,22 @@ router.post("/", async (req, res) => {
       return res.json({
         type: "text",
         reply:
-          "🤖 I can help you with:\n• Product search\n• Budget shopping\n• Cheapest products\n\n"
+`🤖 I can help you with:
+
+• Product search
+• Budget shopping
+• Best deals
+• Daily items
+
+👉 Try:
+• "milk"
+• "atta under 300"
+• "cheap products"`
       });
     }
 
     /* =========================
-       🟢 ADDRESS GUIDE
+       🟢 ADDRESS
     ========================= */
     if (intent === "address") {
       return res.json({
@@ -78,17 +105,16 @@ router.post("/", async (req, res) => {
         reply:
 `📍 How to add address:
 
-1️⃣ Go to Profile / Account  
-2️⃣ Click "Add Address"  
-3️⃣ Enter your details  
-4️⃣ Save  
+1️⃣ Go to Profile  
+2️⃣ Add Address  
+3️⃣ Save  
 
-✅ Now you can place orders easily!`
+✅ Done!`
       });
     }
 
     /* =========================
-       🟢 ORDER GUIDE
+       🟢 ORDER
     ========================= */
     if (intent === "order") {
       return res.json({
@@ -97,17 +123,16 @@ router.post("/", async (req, res) => {
 `🛒 How to place order:
 
 1️⃣ Search product  
-2️⃣ Click ADD  
-3️⃣ Go to Cart  
-4️⃣ Click Checkout  
-5️⃣ Select address & payment  
+2️⃣ Add to cart  
+3️⃣ Checkout  
+4️⃣ Payment  
 
 🎉 Done!`
       });
     }
 
     /* =========================
-       🟢 PAYMENT GUIDE
+       🟢 PAYMENT
     ========================= */
     if (intent === "payment") {
       return res.json({
@@ -115,42 +140,76 @@ router.post("/", async (req, res) => {
         reply:
 `💳 Payment options:
 
-• UPI (GPay, PhonePe)
-• Cash on Delivery
-• Debit/Credit Card`
+• UPI  
+• Card  
+• COD`
       });
     }
 
     /* =========================
-       🟢 HANDLE "NOT FOUND RICE"
+       🟢 RECOMMENDED
     ========================= */
-    if (msg.includes("not finding") || msg.includes("not found")) {
-      const cleanKeyword = msg.replace(/not finding|not found/g, "").trim();
+    if (intent === "recommend") {
+      const products = await Product.find().sort({ rating: -1 }).limit(5);
+
+      return res.json({
+        type: "list",
+        title: "⭐ Recommended",
+        data: products
+      });
+    }
+
+    /* =========================
+       🟢 DEALS
+    ========================= */
+    if (intent === "deal") {
+      const deals = await Product.find().sort({ price: 1 }).limit(5);
+
+      return res.json({
+        type: "list",
+        title: "🔥 Best Deals",
+        data: deals
+      });
+    }
+
+    /* =========================
+       🟢 DAILY
+    ========================= */
+    if (intent === "daily") {
+      const items = await Product.find({
+        name: { $regex: "milk|bread|egg", $options: "i" }
+      }).limit(5);
+
+      return res.json({
+        type: "list",
+        title: "🥛 Daily Essentials",
+        data: items
+      });
+    }
+
+    /* =========================
+       🟢 SMART SEARCH (FINAL FIX)
+    ========================= */
+
+    // 🔥 CASE 1: ONLY PRICE (under 500, 200, etc.)
+    if (price && !keyword) {
 
       const products = await Product.find({
-        name: { $regex: cleanKeyword, $options: "i" }
-      }).limit(5);
+        price: { $lte: price }
+      }).limit(20);
 
       if (products.length > 0) {
         return res.json({
           type: "products",
-          title: `🛒 Showing results for "${cleanKeyword}"`,
-          data: products.map(p => ({
-            id: p._id,
-            name: p.name,
-            price: p.price,
-            image: p.image,
-            stock: p.stock
-          }))
+          title: `🛒 Products under ₹${price}`,
+          data: products
         });
       }
     }
 
-    /* =========================
-       🟢 SMART PRODUCT SEARCH
-    ========================= */
+    // 🔥 CASE 2: KEYWORD + PRICE
     let query = {
-      name: { $regex: keyword, $options: "i" }
+      name: { $regex: keyword.split(" ").join("|"), $options: "i" }
     };
 
     if (price) {
@@ -165,38 +224,12 @@ router.post("/", async (req, res) => {
         title: price
           ? `🛒 ${keyword} under ₹${price}`
           : `🛒 Results for "${keyword}"`,
-        data: products.map(p => ({
-          id: p._id,
-          name: p.name,
-          price: p.price,
-          image: p.image,
-          stock: p.stock
-        }))
+        data: products
       });
     }
 
     /* =========================
-       🟢 CHEAP PRODUCTS
-    ========================= */
-    if (intent === "cheap") {
-      const cheapProducts = await Product.find()
-        .sort({ price: 1 })
-        .limit(5);
-
-      return res.json({
-        type: "list",
-        title: "🤑 Cheapest Products",
-        data: cheapProducts.map(p => ({
-          id: p._id,
-          name: p.name,
-          price: p.price,
-          image: p.image
-        }))
-      });
-    }
-
-    /* =========================
-       🟢 SUBCATEGORY SEARCH
+       🟢 SUBCATEGORY
     ========================= */
     const sub = await SubCategory.findOne({
       name: { $regex: keyword, $options: "i" }
@@ -210,17 +243,12 @@ router.post("/", async (req, res) => {
       return res.json({
         type: "list",
         title: `📂 ${sub.name}`,
-        data: subProducts.map(p => ({
-          id: p._id,
-          name: p.name,
-          price: p.price,
-          image: p.image
-        }))
+        data: subProducts
       });
     }
 
     /* =========================
-       🟢 CATEGORY SEARCH
+       🟢 CATEGORY
     ========================= */
     const category = await Category.findOne({
       name: { $regex: keyword, $options: "i" }
@@ -234,26 +262,36 @@ router.post("/", async (req, res) => {
       return res.json({
         type: "list",
         title: `📦 ${category.name}`,
-        data: catProducts.map(p => ({
-          id: p._id,
-          name: p.name,
-          price: p.price,
-          image: p.image
-        }))
+        data: catProducts
       });
     }
 
     /* =========================
-       🔴 FINAL FALLBACK
+       🔴 FALLBACK
     ========================= */
     const cats = await Category.find().limit(5);
 
+    const suggestions = await Product.find()
+      .sort({ stock: -1 })
+      .limit(5);
+
     return res.json({
-      type: "text",
+      type: "rich",
       reply:
-        "❌ Product not found.\n\n👉 Try categories:\n\n" +
-        cats.map(c => `• ${c.name}`).join("\n") +
-        "\n\n💡 Example: 'rice' or 'atta'"
+`😕 Product not found.
+
+👉 Try:
+• rice, atta, oil
+• milk, bread, snacks
+
+💡 Or type:
+• under 500
+• cheap products
+
+👇 Popular items:`,
+
+      suggestions: suggestions,
+      categories: cats.map(c => c.name)
     });
 
   } catch (err) {

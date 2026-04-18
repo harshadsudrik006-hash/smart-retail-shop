@@ -1,8 +1,9 @@
 /* PAGE */
 .page-title {
   margin: 20px;
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
+  color: #333;
 }
 
 /* STATS */
@@ -15,18 +16,18 @@
 
 .card {
   flex: 1;
-  min-width: 200px;
+  min-width: 250px;
   padding: 25px;
-  border-radius: 16px;
+  border-radius: 18px;
   text-align: center;
   color: white;
   font-size: 18px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   transition: 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
 }
 
 /* GRADIENT CARD */
@@ -40,7 +41,7 @@
 }
 
 .card p {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
 }
 
@@ -56,8 +57,8 @@
   text-decoration: none;
   background: white;
   border: 1px solid #ddd;
-  padding: 10px 18px;
-  border-radius: 10px;
+  padding: 12px 20px;
+  border-radius: 12px;
   font-weight: 500;
   color: #333;
   transition: 0.3s;
@@ -73,7 +74,7 @@
 .alert-box {
   margin: 20px;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #fff5f5;
   border: 1px solid #ff4d4d;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -98,9 +99,9 @@
 .low-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 12px;
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   border-left: 4px solid red;
   font-size: 14px;
 }
@@ -111,5 +112,97 @@
 
 .low-item .stock {
   color: red;
+  font-weight: bold;
+}
+
+/* 🔥 DELIVERY DASHBOARD CARDS */
+.card {
+  background: #ffffff;
+  color: #333;
+  margin: 20px;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* TEXT INSIDE CARD */
+.card p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* 🔥 BUTTONS */
+button {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s;
+}
+
+/* PRIMARY */
+button:hover {
+  opacity: 0.9;
+}
+
+/* TRACK BUTTON */
+button:first-of-type {
+  background: #007bff;
+  color: white;
+}
+
+/* OTP BUTTON */
+button:nth-of-type(2) {
+  background: #6c757d;
+  color: white;
+}
+
+/* CONFIRM BUTTON */
+button:nth-of-type(3) {
+  background: #28a745;
+  color: white;
+}
+
+/* CASH BUTTON */
+button:last-of-type {
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+}
+
+/* INPUT */
+input {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin: 5px;
+  font-size: 13px;
+}
+
+/* 🔥 PAYMENT BOX */
+.payment-box {
+  background: #fff3cd;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border-left: 4px solid orange;
+}
+
+/* PAID */
+.paid {
+  color: green;
+  font-weight: bold;
+}
+
+/* PENDING */
+.pending {
+  color: orange;
   font-weight: bold;
 }

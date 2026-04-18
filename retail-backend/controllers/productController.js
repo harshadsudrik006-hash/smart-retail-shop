@@ -210,6 +210,11 @@ exports.updateStock = async (req, res) => {
     // 🔥 UPDATE STOCK
     product.stock = stock;
 
+    // ✅ 🔥 AUTO LOW STOCK CHECK (ADDED)
+    if (product.stock <= (product.lowStockAlert || 10)) {
+      console.log(`⚠ LOW STOCK ALERT: ${product.name} (${product.stock} left)`);
+    }
+
     await product.save();
 
     res.json({
@@ -226,32 +231,29 @@ exports.updateStock = async (req, res) => {
 //Low Stock
 
 exports.getLowStockProducts = async (req, res) => {
-
   try {
 
     const products = await Product.find({
-      $expr: { $lte: ["$stock", "$lowStockAlert"] }
+      $or: [
+        { stock: { $lte: 10 } }, // 🔥 main condition
+        {
+          $expr: {
+            $lte: [
+              "$stock",
+              { $ifNull: ["$lowStockAlert", 10] } // 🔥 SAFE fallback
+            ]
+          }
+        }
+      ]
     });
-
-    // 🔥 ADD THIS (fallback)
-    if (products.length === 0) {
-      const fallbackProducts = await Product.find({
-        stock: { $lte: 10 }
-      });
-
-      return res.json(fallbackProducts);
-    }
 
     res.json(products);
 
   } catch (error) {
-
+    console.log("❌ LOW STOCK ERROR:", error);
     res.status(500).json({ error: error.message });
-
   }
-
 };
-
 
 /* GET ALL PRODUCTS */
 exports.getProducts = async (req, res) => {

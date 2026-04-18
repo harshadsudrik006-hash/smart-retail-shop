@@ -51,42 +51,35 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
   }
 
   // 🔥 LIVE TRACKING
-startTracking(order:any){
+  startTracking(order:any){
 
-  if(!navigator.geolocation){
-    alert("GPS not supported ❌");
-    return;
-  }
-
-  navigator.geolocation.watchPosition(
-
-    // ✅ SUCCESS
-    (pos)=>{
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-
-      console.log("📍 Sending:", lat, lng);
-
-      this.http.put(
-        `http://localhost:5000/api/orders/location/${order._id}`,
-        { lat, lng },
-        { headers:this.getHeaders() }
-      ).subscribe();
-    },
-
-    // ✅ ERROR CALLBACK
-    (err)=>{
-      console.error("GPS error:", err);
-    },
-
-    // ✅ OPTIONS
-    {
-      enableHighAccuracy:true
+    if(!navigator.geolocation){
+      alert("GPS not supported ❌");
+      return;
     }
 
-  );
+    navigator.geolocation.watchPosition(
 
-}
+      (pos)=>{
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        this.http.put(
+          `http://localhost:5000/api/orders/location/${order._id}`,
+          { lat, lng },
+          { headers:this.getHeaders() }
+        ).subscribe();
+      },
+
+      (err)=>{
+        console.error("GPS error:", err);
+      },
+
+      {
+        enableHighAccuracy:true
+      }
+    );
+  }
 
   sendOTP(order:any){
     this.http.post(
@@ -105,6 +98,19 @@ startTracking(order:any){
       { headers: this.getHeaders() }
     ).subscribe(()=>{
       alert("Delivered ✅");
+      this.loadOrders();
+    });
+  }
+
+  // 💰 MARK PAYMENT
+  markPaid(order:any){
+    this.http.put(
+      `http://localhost:5000/api/orders/payment/${order._id}`,
+      {},
+      { headers: this.getHeaders() }
+    ).subscribe(()=>{
+      alert("Cash Received ✅");
+      this.loadOrders();
     });
   }
 

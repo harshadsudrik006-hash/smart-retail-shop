@@ -1,10 +1,12 @@
-<div class="product-card" [class.out]="+product.stock <= 0">
+<div class="product-card" 
+     [class.out]="(product.stock - (product.reservedStock || 0)) <= 0">
 
   <div class="img-container">
     <img [src]="product.image" class="product-img">
 
     <!-- 🔥 OUT OF STOCK -->
-    <div class="badge" *ngIf="+product.stock <= 0">
+    <div class="badge" 
+         *ngIf="(product.stock - (product.reservedStock || 0)) <= 0">
       Out of Stock
     </div>
   </div>
@@ -13,11 +15,40 @@
 
   <p class="price">₹{{product.price}}</p>
 
+  <!-- 🔴 OUT OF STOCK BUTTON -->
   <button 
-    (click)="addToCart()" 
-    [disabled]="+product.stock <= 0"
-  >
-    {{ (+product.stock <= 0) ? 'Out of Stock' : 'Add to Cart' }}
+    *ngIf="(product.stock - (product.reservedStock || 0)) <= 0"
+    disabled>
+    Out of Stock
   </button>
+
+  <!-- 🟢 ADD BUTTON -->
+  <button 
+    *ngIf="quantity === 0 && (product.stock - (product.reservedStock || 0)) > 0"
+    (click)="addToCart()">
+    Add to Cart
+  </button>
+
+  <!-- 🟡 QTY CONTROLLER -->
+  <div class="qty-box" *ngIf="quantity > 0">
+
+    <button (click)="decrease()">-</button>
+
+    <span>{{quantity}}</span>
+
+    <!-- 🔥 DISABLE WHEN LIMIT -->
+    <button 
+      (click)="increase()"
+      [disabled]="quantity >= (product.stock - (product.reservedStock || 0))">
+      +
+    </button>
+
+  </div>
+
+  <!-- 🔥 STOCK WARNING -->
+  <div *ngIf="quantity >= (product.stock - (product.reservedStock || 0))" 
+       style="color:red; font-size:12px;">
+    Only {{product.stock - (product.reservedStock || 0)}} available
+  </div>
 
 </div>

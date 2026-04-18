@@ -29,6 +29,11 @@ const productSchema = new mongoose.Schema({
   }
 ],
 
+reservedStock: {
+  type: Number,
+  default: 0
+},
+
   stock: Number,
   lowStockAlert: Number,
 

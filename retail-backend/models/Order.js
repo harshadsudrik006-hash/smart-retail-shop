@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
 },
 cancelledBy: {
   type: String,
-  enum: ["User", "Admin"],
+  enum: ["user", "admin"],
   default: null
 },
 
@@ -68,6 +68,10 @@ cancelledBy: {
       }
     }
   ],
+
+  deliveredAt: {
+  type: Date
+},
 
   deliveryLocation: {
   lat: Number,

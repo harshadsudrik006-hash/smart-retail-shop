@@ -23,8 +23,21 @@
 
           <div class="qty">
             <button (click)="decreaseQty(item)">-</button>
+
             <span>{{item.quantity}}</span>
-            <button (click)="increaseQty(item)">+</button>
+
+            <!-- 🔥 UPDATED (+ button control) -->
+            <button 
+              (click)="increaseQty(item)"
+              [disabled]="item.quantity >= item.product.stock">
+              +
+            </button>
+          </div>
+
+          <!-- 🔴 NEW: STOCK LIMIT MESSAGE -->
+          <div *ngIf="item.quantity >= item.product.stock"
+               style="color:red; font-size:12px; margin-top:5px;">
+            Max limit reached ({{item.product.stock}})
           </div>
 
           <button class="remove" (click)="removeItem(item)">
@@ -45,6 +58,12 @@
       <div class="row">
         <span>Subtotal</span>
         <span>₹{{total}}</span>
+      </div>
+
+      <!-- 🔥 NEW: TOTAL ITEMS (ADDED ONLY) -->
+      <div class="row">
+        <span>Total Items</span>
+        <span>{{items.length}}</span>
       </div>
 
       <div class="row total">

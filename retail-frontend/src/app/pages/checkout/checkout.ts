@@ -14,7 +14,6 @@ export class Checkout implements OnInit{
 
   otp = "";
   otpSent = false;
-
   otpArray: string[] = ["", "", "", "", "", ""];
 
   paymentMethod = "online";
@@ -25,12 +24,10 @@ export class Checkout implements OnInit{
   cartTotal=0;
   finalAmount=0;
   discount=0;
-  bestCoupon:any=null;
 
   usePoints = false;
   userPoints = 0;
 
-  // 🔥 RAZORPAY QR
   qrImage:string = "";
 
   constructor(private http:HttpClient){}
@@ -81,7 +78,6 @@ export class Checkout implements OnInit{
       next:(res:any)=>{
         this.discount = res.discount || 0;
         this.finalAmount = res.finalAmount || this.cartTotal;
-        this.bestCoupon = res.coupon;
       },
       error:()=>{
         this.discount = 0;
@@ -90,23 +86,41 @@ export class Checkout implements OnInit{
     });
   }
 
+  // 🔥 VALIDATION FUNCTION
+  canUsePoints(){
+    return this.userPoints >= 100 && this.cartTotal >= 100;
+  }
+
+  // 🔥 FINAL AMOUNT
   getFinalAmount(){
 
     let amount = this.finalAmount || this.cartTotal;
 
     if(
       this.usePoints &&
-      this.paymentMethod === "cod" &&
-      this.userPoints >= 100 &&
-      amount >= 100
+      this.canUsePoints()
     ){
       amount -= Math.min(this.userPoints, amount);
     }
 
-    return amount;
+    return Math.round(amount);
   }
 
-  // 🚀 MAIN ACTION
+  // 🔥 USED POINTS
+  getUsedPoints(){
+
+    let amount = this.finalAmount || this.cartTotal;
+
+    if(
+      this.usePoints &&
+      this.canUsePoints()
+    ){
+      return Math.min(this.userPoints, amount);
+    }
+
+    return 0;
+  }
+
   proceed(){
 
     if(!this.selectedAddress){
@@ -118,14 +132,13 @@ export class Checkout implements OnInit{
       this.sendOTP();
     } 
     else if(this.paymentMethod === "qr"){
-      this.generateQR();   // 🔥 Razorpay QR
+      this.generateQR();
     }
     else {
       this.payNow();
     }
   }
 
-  // 💳 RAZORPAY POPUP
   payNow(){
 
     const amount = this.getFinalAmount();
@@ -164,7 +177,6 @@ export class Checkout implements OnInit{
 
   }
 
-  // 🔥 RAZORPAY QR (FINAL FIX)
   generateQR(){
 
     const amount = this.getFinalAmount();
@@ -174,22 +186,18 @@ export class Checkout implements OnInit{
       { amount },
       this.getHeaders()
     ).subscribe((res:any)=>{
-
       this.qrImage = res.qrCode;
-
     },()=>{
       alert("QR generation failed ❌");
     });
 
   }
 
-  // 🔥 QR CONFIRM
   confirmQRPayment(){
     alert("✅ Payment Done");
     this.sendOTP();
   }
 
-  // 🔐 OTP
   sendOTP(){
     this.http.post(
       "http://localhost:5000/api/orders/send-otp",
@@ -203,7 +211,6 @@ export class Checkout implements OnInit{
 
   moveNext(event:any, index:number){
     const value = event.target.value;
-
     this.otpArray[index-1] = value;
 
     if(value && event.target.nextElementSibling){
@@ -234,10 +241,7 @@ export class Checkout implements OnInit{
     ).subscribe(()=>{
       alert("🎉 Order placed successfully");
 
-      this.otp="";
-      this.otpSent=false;
-      this.selectedAddress=null;
-      this.otpArray=["","","","","",""];
+      window.location.reload();
     });
 
   }
