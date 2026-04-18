@@ -4,77 +4,80 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 @Component({
-selector:'app-admin-products',
-standalone:true,
-imports:[CommonModule, RouterModule],
-templateUrl:'./products.html',
-styleUrl:'./products.css'
+  selector:'app-admin-products',
+  standalone:true,
+  imports:[CommonModule, RouterModule],
+  templateUrl:'./products.html',
+  styleUrl:'./products.css'
 })
 export class Products implements OnInit{
 
-products:any[]=[];
+  products:any[] = [];
 
-constructor(private http:HttpClient){}
+  // 🔥 FIXED API (NO LOCALHOST)
+  api = "https://smart-retail-shop-major-project.onrender.com/api/products";
 
-ngOnInit(){
+  constructor(private http:HttpClient){}
 
-const token = localStorage.getItem("token");
+  ngOnInit(){
 
-this.http.get("http://localhost:5000/api/products",{
-headers:{
-Authorization:`Bearer ${token}`
-}
-})
-.subscribe((res:any)=>{
-this.products=res;
-});
+    const token = localStorage.getItem("token");
 
-}
+    this.http.get(this.api,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+    .subscribe((res:any)=>{
+      this.products = res;
+    });
 
-deleteProduct(id:string){
+  }
 
-const token = localStorage.getItem("token");
+  deleteProduct(id:string){
 
-this.http.delete(`http://localhost:5000/api/products/${id}`,{
-headers:{
-Authorization:`Bearer ${token}`
-}
-})
-.subscribe(()=>{
+    const token = localStorage.getItem("token");
 
-alert("Product deleted");
+    this.http.delete(`${this.api}/${id}`,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+    .subscribe(()=>{
 
-this.products = this.products.filter(p=>p._id !== id);
+      alert("Product deleted");
 
-});
+      this.products = this.products.filter(p=>p._id !== id);
 
-}
+    });
 
-goBack(){
+  }
+
+  goBack(){
     window.history.back();
-}
+  }
 
-downloadExcel(){
+  downloadExcel(){
 
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  fetch("http://localhost:5000/api/products/stock-excel",{
-    headers:{
-      Authorization:`Bearer ${token}`
-    }
-  })
-  .then(res => res.blob())
-  .then(blob => {
+    fetch(`${this.api}/stock-excel`,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+    .then(res => res.blob())
+    .then(blob => {
 
-    const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "stock-report.xlsx";
-    a.click();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "stock-report.xlsx";
+      a.click();
 
-  });
+    });
 
-}
+  }
 
 }

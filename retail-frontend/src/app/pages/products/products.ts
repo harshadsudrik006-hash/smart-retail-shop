@@ -13,7 +13,8 @@ import { ProductService } from '../../core/services/product';
 })
 export class Products implements OnInit {
 
-  products:any[] = [];
+  products: any[] = [];
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,7 +23,6 @@ export class Products implements OnInit {
 
   ngOnInit(){
 
-    // 🔥 SINGLE SUBSCRIPTION (CLEAN)
     this.route.params.subscribe(params => {
 
       const subcategoryId = params['id'];
@@ -31,42 +31,60 @@ export class Products implements OnInit {
 
         const search = query['q'];
 
-        // 🔍 SEARCH MODE
-        if(search){
+        this.loadProducts(search, subcategoryId);
 
-          console.log("Searching:", search);
-
-          this.products = []; // clear old data
-
-          this.productService.searchProducts(search)
-          .subscribe((res:any)=>{
-            this.products = res;
-          });
-
-        }
-
-        // 📦 SUBCATEGORY MODE
-        else if(subcategoryId){
-
-          console.log("SubCategory ID:", subcategoryId);
-
-          this.products = []; // clear old data
-
-          this.productService.getProductsBySubcategory(subcategoryId)
-          .subscribe((res:any)=>{
-            this.products = res;
-          });
-
-        }
-
-        // ❌ NO DATA
-        else{
-          this.products = [];
-        }
+        // 🔁 RETRY (important for Render sleep issue)
+        setTimeout(() => {
+          if(this.products.length === 0){
+            this.loadProducts(search, subcategoryId);
+          }
+        }, 3000);
 
       });
 
     });
+
+  }
+
+  // 🔥 MAIN FUNCTION
+  loadProducts(search:any, subcategoryId:any){
+
+    this.loading = true;
+
+    if(search){
+
+      this.productService.searchProducts(search)
+        .subscribe({
+          next: (res:any)=>{
+            this.products = res;
+            this.loading = false;
+          },
+          error: ()=>{
+            this.loading = false;
+          }
+        });
+
+    }
+
+    else if(subcategoryId){
+
+      this.productService.getProductsBySubcategory(subcategoryId)
+        .subscribe({
+          next: (res:any)=>{
+            this.products = res;
+            this.loading = false;
+          },
+          error: ()=>{
+            this.loading = false;
+          }
+        });
+
+    }
+
+    else{
+      this.products = [];
+      this.loading = false;
+    }
 
   }
 
