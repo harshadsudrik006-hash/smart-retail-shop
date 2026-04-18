@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ChatService {
 
-  private apiUrl = 'http://localhost:5000/api/chat';
+  private apiUrl = 'https://smart-retail-shop-major-project.onrender.com/api/chat';
 
   constructor(private http: HttpClient) {}
 

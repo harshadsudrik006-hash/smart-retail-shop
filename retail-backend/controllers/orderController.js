@@ -7,6 +7,7 @@ const sendSMS = require("../utils/sendSMS");
 const ORDER_STATUS = require("../constants/orderStatus");
 const Invoice = require("../models/Invoice");
 const generateInvoice = require("../utils/generateInvoice");
+const Inventory = require("../models/Inventory");
 const mongoose = require("mongoose"); // ✅ ADD THIS
 
 // OTP Stores
@@ -61,7 +62,7 @@ exports.sendOrderOTP = async (req, res) => {
 /* ===========================
    PLACE ORDER
 =========================== */
-const Inventory = require("../models/Inventory"); // ✅ ADD THIS TOP
+ // ✅ ADD THIS TOP
 
 exports.placeOrder = async (req, res) => {
   try {
@@ -90,20 +91,22 @@ exports.placeOrder = async (req, res) => {
 
       if (!product) continue;
 
-      // ❌ STOCK CHECK (VERY IMPORTANT)
-      if (product.stock < item.quantity) {
+      // ❌ OLD STOCK CHECK
+      // if (product.stock < item.quantity) { ... }
+
+      // ✅ NEW AVAILABLE STOCK CHECK (stock - reservedStock)
+      if ((product.stock - (product.reservedStock || 0)) < item.quantity) {
         return res.status(400).json({
-       message: `${product.name} is out of stock ❌`
-      });
-    }
-
-    // ✅ REDUCE STOCK IMMEDIATELY
-    product.stock -= item.quantity;
-
-    // ❌ SAFETY CHECK
-     if (product.stock < 0) {
-       product.stock = 0;
+          message: `${product.name} is out of stock ❌`
+        });
       }
+
+      // ❌ OLD LOGIC (DO NOT DELETE)
+      // product.stock -= item.quantity;
+      // if (product.stock < 0) product.stock = 0;
+
+      // ✅ NEW LOGIC → RESERVE STOCK
+      product.reservedStock = (product.reservedStock || 0) + item.quantity;
 
       await product.save();
 
@@ -113,7 +116,7 @@ exports.placeOrder = async (req, res) => {
         product: product._id,
         quantity: item.quantity
       });
-  }
+    }
 
     // 🔥 APPLY COUPON DISCOUNT
     total -= discount;
@@ -121,7 +124,6 @@ exports.placeOrder = async (req, res) => {
 
     const user = await User.findById(userId);
 
-    // 🟢 POINT REDEEM (ONLY COD)
     let pointsUsed = 0;
 
     if (
@@ -132,11 +134,9 @@ exports.placeOrder = async (req, res) => {
     ) {
       pointsUsed = Math.min(user.points, total);
       total -= pointsUsed;
-
       user.points -= pointsUsed;
     }
 
-    // 🧾 CREATE ORDER
     const order = await Order.create({
       user: userId,
       address: addressId,
@@ -146,16 +146,14 @@ exports.placeOrder = async (req, res) => {
       paymentStatus: paymentMethod === "online" ? "paid" : "pending",
       paymentId,
       pointsUsed,
-      discount, // 🔥 SAVE DISCOUNT
+      discount,
       status: "Pending",
       timeline: [{ status: "Pending" }]
     });
 
     await Cart.deleteOne({ user: userId });
 
-    // 🟢 POINT EARNING
     const earnedPoints = Math.floor(total / 100);
-
     user.points += earnedPoints;
     await user.save();
 
@@ -169,6 +167,7 @@ exports.placeOrder = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 /* ===========================
    GET USER ORDERS
@@ -623,8 +622,16 @@ exports.verifyDeliveryOTP = async (req, res) => {
     const { otp } = req.body;
     const stored = deliveryOTPStore[req.params.id];
 
-    if (!stored || stored.otp != otp || stored.expires < Date.now()) {
-      return res.status(400).json({ message: "Invalid OTP ❌" });
+    // ❌ OLD CHECK
+    // if (!stored || stored.otp != otp || stored.expires < Date.now())
+
+    // ✅ UPDATED OTP VALIDATION (MORE SAFE)
+    if (
+      !stored ||
+      stored.otp != otp ||
+      stored.expires < Date.now()
+    ) {
+      return res.status(400).json({ message: "Invalid or Expired OTP ❌" });
     }
 
     delete deliveryOTPStore[req.params.id];
@@ -645,9 +652,6 @@ exports.verifyDeliveryOTP = async (req, res) => {
     // 🔥 DELIVERY TIME
     order.deliveredAt = new Date();
 
-    // ❌ REMOVED AUTO PAYMENT
-    // Payment will be handled manually
-
     order.timeline.push({
       status: "Delivered",
       date: new Date()
@@ -655,7 +659,7 @@ exports.verifyDeliveryOTP = async (req, res) => {
 
     await order.save();
 
-    // 📦 ✅ STOCK DECREASE HERE
+    // 📦 ✅ STOCK FINALIZATION HERE
     for (const item of order.products) {
 
       const stockItem = await Inventory.findOne({
@@ -663,6 +667,11 @@ exports.verifyDeliveryOTP = async (req, res) => {
       });
 
       if (stockItem) {
+
+        // ❌ OLD LOGIC
+        // stockItem.stock -= item.quantity;
+
+        // ✅ KEEP IF YOU USE INVENTORY SYSTEM
         stockItem.stock -= item.quantity;
 
         if (stockItem.stock < 0) {
@@ -675,12 +684,19 @@ exports.verifyDeliveryOTP = async (req, res) => {
       const product = await Product.findById(item.product);
 
       if (product) {
+
+        // ❌ OLD LOGIC
+        // product.stock -= item.quantity;
+
+        // ✅ NEW FINAL LOGIC
         product.stock -= item.quantity;
+        product.reservedStock -= item.quantity;
 
-        if (product.stock < 0) {
-          product.stock = 0;
-        }
+        // 🔐 SAFETY
+        if (product.stock < 0) product.stock = 0;
+        if (product.reservedStock < 0) product.reservedStock = 0;
 
+        // 🔔 LOW STOCK ALERT
         if (product.stock <= (product.lowStockAlert || 10)) {
           console.log(`⚠ LOW STOCK AFTER DELIVERY: ${product.name} (${product.stock} left)`);
 
@@ -697,7 +713,7 @@ exports.verifyDeliveryOTP = async (req, res) => {
       }
     }
 
-    console.log("📦 STOCK UPDATED AFTER DELIVERY");
+    console.log("📦 STOCK FINALIZED AFTER DELIVERY");
 
     // 🧾 INVOICE
     const existingInvoice = await Invoice.findOne({ order: order._id });
@@ -726,7 +742,7 @@ exports.verifyDeliveryOTP = async (req, res) => {
     }
 
     res.json({
-      message: "Delivered + Stock Updated + Invoice Created ✅",
+      message: "Delivered + Stock Finalized + Invoice Created ✅",
       order
     });
 
@@ -821,9 +837,24 @@ exports.cancelOrder = async (req, res) => {
       return res.status(400).json({ message: "Cannot cancel delivered order ❌" });
     }
 
-    // ✅ USER CANCEL
+    // 🔥 RESTORE RESERVED STOCK
+    for (const item of order.products) {
+
+      const product = await Product.findById(item.product);
+
+      if (product) {
+        product.reservedStock -= item.quantity;
+
+        if (product.reservedStock < 0) {
+          product.reservedStock = 0;
+        }
+
+        await product.save();
+      }
+    }
+
     order.status = "Cancelled";
-    order.cancelledBy = "user"; // 🔥 LOWERCASE FIX
+    order.cancelledBy = "user";
 
     order.timeline.push({
       status: "Cancelled",
@@ -832,7 +863,6 @@ exports.cancelOrder = async (req, res) => {
 
     await order.save();
 
-    // 🔥🔥 ADD THIS (IMPORTANT)
     if (global.io) {
       global.io.emit("orderUpdated", {
         orderId: order._id,
@@ -864,9 +894,24 @@ exports.adminCancelOrder = async (req, res) => {
       return res.status(400).json({ message: "Cannot cancel delivered order ❌" });
     }
 
-    // ✅ ADMIN CANCEL
+    // 🔥 RESTORE RESERVED STOCK
+    for (const item of order.products) {
+
+      const product = await Product.findById(item.product);
+
+      if (product) {
+        product.reservedStock -= item.quantity;
+
+        if (product.reservedStock < 0) {
+          product.reservedStock = 0;
+        }
+
+        await product.save();
+      }
+    }
+
     order.status = "Cancelled";
-    order.cancelledBy = "admin"; 
+    order.cancelledBy = "admin";
 
     order.timeline.push({
       status: "Cancelled",
@@ -875,7 +920,6 @@ exports.adminCancelOrder = async (req, res) => {
 
     await order.save();
 
-    // 🔥🔥 ADD THIS (IMPORTANT)
     if (global.io) {
       global.io.emit("orderUpdated", {
         orderId: order._id,

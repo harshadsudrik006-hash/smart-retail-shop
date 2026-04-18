@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class Auth {
 
-  api = "http://localhost:5000/api/auth";
+  api = "https://smart-retail-shop-major-project.onrender.com/api/auth";
 
   // 🔥 USER STATE
   private userSubject = new BehaviorSubject<any>(this.getUserFromStorage());

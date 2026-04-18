@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class OrderService{
 
-  api="http://localhost:5000/api/orders";
+  api = "https://smart-retail-shop-major-project.onrender.com/api/orders";
 
   constructor(private http:HttpClient){}
 
