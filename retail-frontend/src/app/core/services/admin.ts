@@ -6,7 +6,7 @@ providedIn:'root'
 })
 export class AdminService{
 
-api="http://localhost:5000/api";
+api="https://smart-retail-shop-major-project.onrender.com/api";
 
 constructor(private http:HttpClient){}
 
