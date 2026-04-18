@@ -11,13 +11,15 @@ imports:[CommonModule, RouterLink],
 templateUrl:'./dashboard.html',
 styleUrl:'./dashboard.css'
 })
-
 export class Dashboard implements OnInit{
 
 stats:any={};
 lowStock:any[]=[];
 
-// 🔥 ADD THIS
+// ✅ GLOBAL API
+API = "https://smart-retail-shop-major-project.onrender.com";
+
+// 🔥 SOCKET
 socket:any;
 
 constructor(private http:HttpClient){}
@@ -36,7 +38,7 @@ const headers = new HttpHeaders({
 });
 
 /* Dashboard Stats */
-this.http.get("http://localhost:5000/api/admin/dashboard",{headers})
+this.http.get(`${this.API}/api/admin/dashboard`,{headers})
 .subscribe({
 
 next:(res:any)=>{
@@ -52,10 +54,10 @@ console.log("Dashboard Error:",err);
 
 
 /* Low Stock Products */
-this.loadLowStock(headers);   // 🔥 REPLACED CALL (same logic)
+this.loadLowStock(headers);
 
-/* 🔥 SOCKET CONNECTION (NEW) */
-this.socket = io("http://localhost:5000");
+/* 🔥 SOCKET CONNECTION (FIXED) */
+this.socket = io(this.API);
 
 /* 🔥 LISTEN LOW STOCK EVENT */
 this.socket.on("lowStockAlert", (data:any)=>{
@@ -67,9 +69,9 @@ this.socket.on("lowStockAlert", (data:any)=>{
 
 }
 
-/* 🔥 ADD THIS FUNCTION (NEW) */
+/* 🔥 LOW STOCK FUNCTION */
 loadLowStock(headers:any){
-  this.http.get("http://localhost:5000/api/products/low-stock",{headers})
+  this.http.get(`${this.API}/api/products/low-stock`,{headers})
   .subscribe({
 
   next:(res:any)=>{
@@ -83,4 +85,5 @@ loadLowStock(headers:any){
 
   });
 }
+
 }

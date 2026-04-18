@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class PaymentService {
 
-  private baseUrl = "http://localhost:5000/api/payment";
+  // ✅ FIXED BASE URL
+  private baseUrl = "https://smart-retail-shop-major-project.onrender.com/api/payment";
 
   constructor(private http: HttpClient) {}
 

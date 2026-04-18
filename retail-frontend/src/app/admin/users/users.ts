@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class Users implements OnInit {
 
+  API = "https://smart-retail-shop-major-project.onrender.com"; // ✅ ADD THIS
+
   users: any[] = [];
   filteredUsers: any[] = [];
   searchText: string = '';
@@ -23,7 +25,7 @@ export class Users implements OnInit {
     this.loadUsers();
   }
 
-  // 🔹 COMMON HEADER METHOD (clean code)
+  // 🔹 COMMON HEADER METHOD
   getHeaders() {
     const token = localStorage.getItem("token");
     return new HttpHeaders({
@@ -35,7 +37,7 @@ export class Users implements OnInit {
   loadUsers() {
     this.loading = true;
 
-    this.http.get("http://localhost:5000/api/admin/users", {
+    this.http.get(`${this.API}/api/admin/users`, {
       headers: this.getHeaders()
     })
     .subscribe({
@@ -51,7 +53,7 @@ export class Users implements OnInit {
     });
   }
 
-  // 🔹 SEARCH FILTER (NO PIPE NEEDED)
+  // 🔹 SEARCH
   onSearch() {
     const value = this.searchText.toLowerCase();
 
@@ -66,7 +68,7 @@ export class Users implements OnInit {
   updateRole(user: any) {
 
     this.http.put(
-      "http://localhost:5000/api/admin/user-role",
+      `${this.API}/api/admin/user-role`,
       {
         userId: user._id,
         role: user.role
@@ -95,7 +97,7 @@ export class Users implements OnInit {
   deleteUser(id: string) {
 
     this.http.delete(
-      `http://localhost:5000/api/admin/users/${id}`,
+      `${this.API}/api/admin/users/${id}`,
       { headers: this.getHeaders() }
     )
     .subscribe({
@@ -109,7 +111,7 @@ export class Users implements OnInit {
     });
   }
 
-  // 🔹 SIMPLE TOAST (NO LIBRARY)
+  // 🔹 SIMPLE TOAST
   showToast(message: string) {
     const toast = document.createElement('div');
     toast.innerText = message;

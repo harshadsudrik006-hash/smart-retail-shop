@@ -14,6 +14,9 @@ import * as L from 'leaflet';
 })
 export class AddAddress implements OnInit, AfterViewInit {
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   map:any;
   marker:any;
 
@@ -194,7 +197,7 @@ export class AddAddress implements OnInit, AfterViewInit {
     if(this.editMode && this.editId){
 
       this.http.put(
-        `http://localhost:5000/api/address/${this.editId}`,
+        `${this.API}/address/${this.editId}`,   // ✅ FIXED
         body,
         {headers}
       ).subscribe(()=>{
@@ -205,7 +208,7 @@ export class AddAddress implements OnInit, AfterViewInit {
     }else{
 
       this.http.post(
-        "http://localhost:5000/api/address",
+        `${this.API}/address`,   // ✅ FIXED
         body,
         {headers}
       ).subscribe(()=>{

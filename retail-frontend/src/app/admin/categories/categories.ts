@@ -12,6 +12,9 @@ styleUrl:'./categories.css'
 })
 export class Categories implements OnInit{
 
+// ✅ GLOBAL API
+API = "https://smart-retail-shop-major-project.onrender.com/api";
+
 categories:any[]=[];
 name="";
 
@@ -25,9 +28,9 @@ this.loadCategories();
 }
 
 loadCategories(){
-this.http.get("http://localhost:5000/api/categories")
+this.http.get(`${this.API}/categories`)
 .subscribe((res:any)=>{
-this.categories=res;
+this.categories = res;
 });
 }
 
@@ -35,7 +38,7 @@ addCategory(){
 const token = localStorage.getItem("token");
 
 this.http.post(
-"http://localhost:5000/api/categories",
+`${this.API}/categories`,
 { name:this.name },
 {
 headers:{ Authorization:`Bearer ${token}` }
@@ -56,7 +59,7 @@ updateCategory(){
 const token = localStorage.getItem("token");
 
 this.http.put(
-`http://localhost:5000/api/categories/${this.selectedCategory._id}`,
+`${this.API}/categories/${this.selectedCategory._id}`,
 { name:this.updatedName },
 { headers:{ Authorization:`Bearer ${token}` } }
 ).subscribe(()=>{
@@ -70,7 +73,7 @@ deleteCategory(id:string){
 const token = localStorage.getItem("token");
 
 this.http.delete(
-`http://localhost:5000/api/categories/${id}`,
+`${this.API}/categories/${id}`,
 { headers:{ Authorization:`Bearer ${token}` } }
 ).subscribe(()=>{
 alert("Deleted");

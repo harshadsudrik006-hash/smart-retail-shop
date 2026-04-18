@@ -14,6 +14,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class Profile implements OnInit {
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   section:string = "orders";
   user:any;
   orders:any[] = [];
@@ -62,7 +65,7 @@ export class Profile implements OnInit {
   /* ---------------- ORDERS ---------------- */
 
   loadOrders(){
-    this.http.get("http://localhost:5000/api/orders/my-orders", this.getHeaders())
+    this.http.get(`${this.API}/orders/my-orders`, this.getHeaders())   // ✅ FIXED
       .subscribe((res:any)=>{
         this.orders = res;
       });
@@ -75,7 +78,7 @@ export class Profile implements OnInit {
 
   repeatOrder(orderId:string){
     this.http.post(
-      `http://localhost:5000/api/orders/repeat/${orderId}`,
+      `${this.API}/orders/repeat/${orderId}`,   // ✅ FIXED
       {},
       this.getHeaders()
     ).subscribe(()=>{
@@ -86,7 +89,7 @@ export class Profile implements OnInit {
 
   cancelOrder(orderId:string){
     this.http.put(
-      `http://localhost:5000/api/orders/cancel/${orderId}`,
+      `${this.API}/orders/cancel/${orderId}`,   // ✅ FIXED
       {},
       this.getHeaders()
     ).subscribe(()=>{
@@ -95,17 +98,16 @@ export class Profile implements OnInit {
     });
   }
 
-  // 🔥 ONLY ADD THIS FUNCTION (rest same hai)
-
-trackOrder(orderId:string){
-  this.router.navigate(['/track-order', orderId]);
-}
+  // 🔥 ONLY ADD THIS FUNCTION (same)
+  trackOrder(orderId:string){
+    this.router.navigate(['/track-order', orderId]);
+  }
 
   /* ---------------- PROFILE ---------------- */
 
   updateProfile(){
     this.http.put(
-      "http://localhost:5000/api/auth/update-profile",
+      `${this.API}/auth/update-profile`,   // ✅ FIXED
       {
         name:this.user.name,
         phone:this.user.phone
@@ -119,7 +121,7 @@ trackOrder(orderId:string){
   /* ---------------- ADDRESS ---------------- */
 
   loadAddresses(){
-    this.http.get("http://localhost:5000/api/address", this.getHeaders())
+    this.http.get(`${this.API}/address`, this.getHeaders())   // ✅ FIXED
       .subscribe((res:any)=>{
         this.addresses = res;
       });
@@ -133,7 +135,7 @@ trackOrder(orderId:string){
 
   deleteAddress(id:any){
     this.http.delete(
-      `http://localhost:5000/api/address/${id}`,
+      `${this.API}/address/${id}`,   // ✅ FIXED
       this.getHeaders()
     ).subscribe(()=>{
       this.loadAddresses();

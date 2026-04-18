@@ -13,6 +13,9 @@ import * as L from 'leaflet';
 })
 export class TrackOrder implements OnInit, OnDestroy{
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   order:any;
   map:any;
   marker:any;
@@ -52,7 +55,7 @@ export class TrackOrder implements OnInit, OnDestroy{
   loadOrder(id:any, token:any){
 
     this.http.get(
-      `http://localhost:5000/api/orders/track/${id}`,
+      `${this.API}/orders/track/${id}`,   // ✅ FIXED
       {
         headers:{ Authorization:`Bearer ${token}` }
       }
@@ -68,51 +71,54 @@ export class TrackOrder implements OnInit, OnDestroy{
     });
   }
 
-initMap(){
+  initMap(){
 
-  let lat = 23.0225;
-  let lng = 72.5714;
+    let lat = 23.0225;
+    let lng = 72.5714;
 
-  // ✅ SAFE CHECK (VERY IMPORTANT)
-  if(
-    this.order?.deliveryLocation &&
-    this.order.deliveryLocation.lat != null &&
-    this.order.deliveryLocation.lng != null
-  ){
-    lat = Number(this.order.deliveryLocation.lat);
-    lng = Number(this.order.deliveryLocation.lng);
-  }
+    // ✅ SAFE CHECK
+    if(
+      this.order?.deliveryLocation &&
+      this.order.deliveryLocation.lat != null &&
+      this.order.deliveryLocation.lng != null
+    ){
+      lat = Number(this.order.deliveryLocation.lat);
+      lng = Number(this.order.deliveryLocation.lng);
+    }
 
-  // ❌ EXTRA SAFETY (avoid crash)
-  if(isNaN(lat) || isNaN(lng)){
-    console.log("Invalid location, using default");
-    lat = 23.0225;
-    lng = 72.5714;
-  }
+    // ❌ EXTRA SAFETY
+    if(isNaN(lat) || isNaN(lng)){
+      console.log("Invalid location, using default");
+      lat = 23.0225;
+      lng = 72.5714;
+    }
 
-  // ✅ CREATE MAP ONLY ONCE
-  if(!this.map){
+    // ✅ CREATE MAP ONLY ONCE
+    if(!this.map){
 
-    this.map = L.map('map').setView([lat, lng], 15);
+      this.map = L.map('map').setView([lat, lng], 15);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      attribution:'© OpenStreetMap'
-    }).addTo(this.map);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        attribution:'© OpenStreetMap'
+      }).addTo(this.map);
 
-    this.marker = L.marker([lat, lng])
-      .addTo(this.map)
-      .bindPopup("Order Location")
-      .openPopup();
+      this.marker = L.marker([lat, lng])
+        .addTo(this.map)
+        .bindPopup("Order Location")
+        .openPopup();
 
-  } 
-  else {
-    this.map.setView([lat, lng], 15);
+    } 
+    else {
 
-    if(this.marker){
-      this.marker.setLatLng([lat, lng]);
-    } else {
-      this.marker = L.marker([lat, lng]).addTo(this.map);
+      this.map.setView([lat, lng], 15);
+
+      if(this.marker){
+        this.marker.setLatLng([lat, lng]);
+      } else {
+        this.marker = L.marker([lat, lng]).addTo(this.map);
+      }
+
     }
   }
-}
+
 }

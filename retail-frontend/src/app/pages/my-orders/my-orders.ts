@@ -13,6 +13,9 @@ import { io } from "socket.io-client";
 })
 export class MyOrders implements OnInit, OnDestroy{
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com";
+
   orders:any[]=[];
   socket:any;
 
@@ -23,8 +26,11 @@ export class MyOrders implements OnInit, OnDestroy{
   ngOnInit(){
     this.loadOrders();
 
-    // 🔥 SOCKET CONNECT
-    this.socket = io("http://localhost:5000");
+    // ❌ OLD
+    // this.socket = io("http://localhost:5000");
+
+    // ✅ UPDATED
+    this.socket = io(this.API);
 
     this.socket.on("orderUpdated", ()=>{
       console.log("🔔 User update");
@@ -49,7 +55,7 @@ export class MyOrders implements OnInit, OnDestroy{
     this.loading = true; // ✅ START LOADING
 
     this.http.get(
-      "http://localhost:5000/api/orders/my-orders",
+      `${this.API}/api/orders/my-orders`,   // ✅ FIXED
       { headers: this.getHeaders() }
     ).subscribe({
       next:(res:any)=>{
@@ -67,7 +73,7 @@ export class MyOrders implements OnInit, OnDestroy{
 
   downloadInvoice(id:any){
     window.open(
-      `http://localhost:5000/api/orders/invoice/${id}`,
+      `${this.API}/api/orders/invoice/${id}`,   // ✅ FIXED
       "_blank"
     );
   }

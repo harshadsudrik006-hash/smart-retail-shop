@@ -12,6 +12,9 @@ import { RouterLink } from '@angular/router';
 })
 export class Cart implements OnInit{
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   items:any[]=[];
   total=0;
 
@@ -31,7 +34,7 @@ export class Cart implements OnInit{
 
   loadCart(){
 
-    this.http.get("http://localhost:5000/api/cart", this.getHeaders())
+    this.http.get(`${this.API}/cart`, this.getHeaders())   // ✅ FIXED
     .subscribe((res:any)=>{
 
       this.items = res?.items || [];
@@ -40,32 +43,32 @@ export class Cart implements OnInit{
     });
   }
 
-increaseQty(item:any){
+  increaseQty(item:any){
 
-  // 🔥 FRONTEND CHECK
-  if(item.quantity >= item.product.stock){
-    alert(`Only ${item.product.stock} items available ❌`);
-    return;
-  }
-
-  this.http.post(
-    "http://localhost:5000/api/cart/add",
-    {
-      productId:item.product._id,
-      quantity:1
-    },
-    this.getHeaders()
-  ).subscribe({
-
-    next: () => this.loadCart(),
-
-    // 🔥 HANDLE BACKEND ERROR
-    error: (err) => {
-      alert(err.error?.message || "Out of Stock ❌");
+    // 🔥 FRONTEND CHECK
+    if(item.quantity >= item.product.stock){
+      alert(`Only ${item.product.stock} items available ❌`);
+      return;
     }
 
-  });
-}
+    this.http.post(
+      `${this.API}/cart/add`,   // ✅ FIXED
+      {
+        productId:item.product._id,
+        quantity:1
+      },
+      this.getHeaders()
+    ).subscribe({
+
+      next: () => this.loadCart(),
+
+      // 🔥 HANDLE BACKEND ERROR
+      error: (err) => {
+        alert(err.error?.message || "Out of Stock ❌");
+      }
+
+    });
+  }
 
   decreaseQty(item:any){
 
@@ -75,7 +78,7 @@ increaseQty(item:any){
     }
 
     this.http.post(
-      "http://localhost:5000/api/cart/add",
+      `${this.API}/cart/add`,   // ✅ FIXED
       {
         productId:item.product._id,
         quantity:-1
@@ -87,7 +90,7 @@ increaseQty(item:any){
   removeItem(item:any){
 
     this.http.delete(
-      `http://localhost:5000/api/cart/${item.product._id}`,
+      `${this.API}/cart/${item.product._id}`,   // ✅ FIXED
       this.getHeaders()
     ).subscribe(()=>this.loadCart());
   }

@@ -13,6 +13,8 @@ styleUrl:'./orders.css'
 })
 export class Orders implements OnInit, OnDestroy{
 
+API = "https://smart-retail-shop-major-project.onrender.com"; // ✅ ADD THIS
+
 orders:any[]=[];
 deliveryBoys:any[]=[];
 socket:any;
@@ -23,8 +25,8 @@ ngOnInit(){
 this.loadOrders();
 this.loadDeliveryBoys();
 
-// 🔥 SOCKET
-this.socket = io("http://localhost:5000");
+// 🔥 SOCKET FIXED
+this.socket = io(this.API);
 
 this.socket.on("orderUpdated", ()=>{
   console.log("🔔 Admin update");
@@ -45,7 +47,7 @@ const headers = new HttpHeaders({
 Authorization:`Bearer ${localStorage.getItem("token")}`
 });
 
-this.http.get("http://localhost:5000/api/admin/orders",{headers})
+this.http.get(`${this.API}/api/admin/orders`,{headers})
 .subscribe((res:any)=>{
   this.orders = res || [];
 });
@@ -58,7 +60,7 @@ const headers = new HttpHeaders({
 Authorization:`Bearer ${localStorage.getItem("token")}`
 });
 
-this.http.get("http://localhost:5000/api/orders/delivery-boys",{headers})
+this.http.get(`${this.API}/api/orders/delivery-boys`,{headers})
 .subscribe((res:any)=>{
   this.deliveryBoys = Array.isArray(res) ? res : [];
 });
@@ -72,7 +74,7 @@ Authorization:`Bearer ${localStorage.getItem("token")}`
 });
 
 this.http.put(
-`http://localhost:5000/api/orders/${order._id}/status`,
+`${this.API}/api/orders/${order._id}/status`,
 { status: order.status },
 { headers }
 ).subscribe(()=>{
@@ -93,16 +95,12 @@ Authorization:`Bearer ${localStorage.getItem("token")}`
 });
 
 this.http.put(
-`http://localhost:5000/api/orders/assign/${order._id}`,
+`${this.API}/api/orders/assign/${order._id}`,
 { deliveryBoyId: order.deliveryBoy },
 { headers }
 ).subscribe(()=>{
   alert("Assigned ✅");
 });
-}
-
-goBack(){
-    window.history.back();
 }
 
 markAsPaid(order:any){
@@ -112,13 +110,17 @@ const headers = new HttpHeaders({
 });
 
 this.http.put(
-`http://localhost:5000/api/orders/payment/${order._id}`,
+`${this.API}/api/orders/payment/${order._id}`,
 {},
 { headers }
 ).subscribe(()=>{
   alert("Payment marked as received ✅");
   this.loadOrders();
 });
+}
+
+goBack(){
+window.history.back();
 }
 
 }

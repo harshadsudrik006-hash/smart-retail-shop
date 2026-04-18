@@ -12,6 +12,9 @@ import { CartService } from '../../core/services/cart';
 })
 export class ProductCard{
 
+  // ✅ GLOBAL API
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   @Input() product:any;
 
   quantity:number = 0;
@@ -21,24 +24,16 @@ export class ProductCard{
     private cartService:CartService
   ){}
 
-  // 🔥 UPDATED ADD TO CART
+  // 🔥 ADD TO CART
   addToCart(){
 
     const available = (this.product.stock || 0) - (this.product.reservedStock || 0);
 
-    // ❌ OLD STOCK CHECK
-    // if(!this.product.stock || this.product.stock <= 0){
-
-    // ✅ NEW STOCK CHECK
     if(available <= 0){
       alert("❌ Product out of stock");
       return;
     }
 
-    // ❌ OLD LIMIT CHECK
-    // if(this.quantity >= this.product.stock){
-
-    // ✅ NEW LIMIT CHECK
     if(this.quantity >= available){
       alert(`Only ${available} items available ❌`);
       return;
@@ -56,7 +51,7 @@ export class ProductCard{
     });
 
     this.http.post(
-      "http://localhost:5000/api/cart/add",
+      `${this.API}/cart/add`,
       {
         productId:this.product._id,
         quantity:1
@@ -94,10 +89,6 @@ export class ProductCard{
 
     const available = (this.product.stock || 0) - (this.product.reservedStock || 0);
 
-    // ❌ OLD
-    // if(this.quantity >= this.product.stock){
-
-    // ✅ NEW
     if(this.quantity >= available){
       alert(`Only ${available} items available ❌`);
       return;
@@ -118,7 +109,7 @@ export class ProductCard{
     if(this.quantity > 1){
 
       this.http.post(
-        "http://localhost:5000/api/cart/add",
+        `${this.API}/cart/add`,
         {
           productId:this.product._id,
           quantity:-1
@@ -132,7 +123,7 @@ export class ProductCard{
     }else{
 
       this.http.delete(
-        `http://localhost:5000/api/cart/${this.product._id}`,
+        `${this.API}/cart/${this.product._id}`,
         {headers}
       ).subscribe(()=>{
         this.quantity = 0;

@@ -13,6 +13,9 @@ import { io } from "socket.io-client";
 })
 export class DeliveryDashboard implements OnInit, OnDestroy{
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com";
+
   orders:any[]=[];
   otpInputs:any = {};
   socket:any;
@@ -22,7 +25,11 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
   ngOnInit(){
     this.loadOrders();
 
-    this.socket = io("http://localhost:5000");
+    // ❌ OLD
+    // this.socket = io("http://localhost:5000");
+
+    // ✅ UPDATED
+    this.socket = io(this.API);
 
     this.socket.on("orderUpdated", ()=>{
       this.loadOrders();
@@ -43,7 +50,7 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
 
   loadOrders(){
     this.http.get(
-      "http://localhost:5000/api/orders/my-delivery-orders",
+      `${this.API}/api/orders/my-delivery-orders`,   // ✅ FIXED
       { headers: this.getHeaders() }
     ).subscribe((res:any)=>{
       this.orders = res || [];
@@ -65,7 +72,7 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
         const lng = pos.coords.longitude;
 
         this.http.put(
-          `http://localhost:5000/api/orders/location/${order._id}`,
+          `${this.API}/api/orders/location/${order._id}`,   // ✅ FIXED
           { lat, lng },
           { headers:this.getHeaders() }
         ).subscribe();
@@ -83,7 +90,7 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
 
   sendOTP(order:any){
     this.http.post(
-      `http://localhost:5000/api/orders/delivery-otp/${order._id}`,
+      `${this.API}/api/orders/delivery-otp/${order._id}`,   // ✅ FIXED
       {},
       { headers: this.getHeaders() }
     ).subscribe(()=> alert("OTP sent 📲"));
@@ -93,7 +100,7 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
     const otp = this.otpInputs[order._id];
 
     this.http.post(
-      `http://localhost:5000/api/orders/verify-delivery/${order._id}`,
+      `${this.API}/api/orders/verify-delivery/${order._id}`,   // ✅ FIXED
       { otp },
       { headers: this.getHeaders() }
     ).subscribe(()=>{
@@ -105,7 +112,7 @@ export class DeliveryDashboard implements OnInit, OnDestroy{
   // 💰 MARK PAYMENT
   markPaid(order:any){
     this.http.put(
-      `http://localhost:5000/api/orders/payment/${order._id}`,
+      `${this.API}/api/orders/payment/${order._id}`,   // ✅ FIXED
       {},
       { headers: this.getHeaders() }
     ).subscribe(()=>{

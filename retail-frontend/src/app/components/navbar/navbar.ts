@@ -16,6 +16,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class Navbar implements OnInit {
 
+  // ✅ GLOBAL API
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   searchText:string = "";
   user:any = null;
   role:string = '';
@@ -35,20 +38,21 @@ export class Navbar implements OnInit {
 
   ngOnInit(){
 
+    // 🔹 USER + ROLE
     this.auth.user$.subscribe(u=>{
       this.user = u;
       this.role = u?.role || '';
     });
 
-    // ✅ FIXED: Now it listens properly
+    // 🔹 CART COUNT SYNC
     this.cartService.cartCount$.subscribe(count=>{
       this.cartCount = count;
     });
 
-    // 🔥 INITIAL LOAD
+    // 🔹 INITIAL LOAD
     this.loadCartCount();
 
-    // 🔥 EVENT LISTENER
+    // 🔹 EVENT LISTENER
     window.addEventListener('cartUpdated', ()=>{
       this.loadCartCount();
       this.cd.detectChanges();
@@ -56,7 +60,7 @@ export class Navbar implements OnInit {
 
   }
 
-  // 🔥 BACKEND CART COUNT
+  // 🔥 BACKEND CART COUNT (FIXED)
   loadCartCount(){
 
     const token = localStorage.getItem("token");
@@ -70,7 +74,7 @@ export class Navbar implements OnInit {
       Authorization:`Bearer ${token}`
     });
 
-    this.http.get("http://localhost:5000/api/cart", {headers})
+    this.http.get(`${this.API}/cart`, {headers})
     .subscribe((res:any)=>{
 
       const items = res?.items || [];
@@ -83,7 +87,7 @@ export class Navbar implements OnInit {
 
       this.cartCount = count;
 
-      // ✅ IMPORTANT SYNC
+      // ✅ SYNC WITH SERVICE
       this.cartService.updateCartCountFromBackend(count);
 
       this.cd.detectChanges();
@@ -92,6 +96,7 @@ export class Navbar implements OnInit {
 
   }
 
+  // 🔍 SEARCH
   search(){
     if(!this.searchText.trim()) return;
 
@@ -100,6 +105,7 @@ export class Navbar implements OnInit {
     });
   }
 
+  // 🖼 IMAGE SEARCH
   onImageSearch(event:any){
     const file = event.target.files[0];
     if(!file) return;
@@ -122,6 +128,7 @@ export class Navbar implements OnInit {
     input.click();
   }
 
+  // 🏠 NAVIGATION
   goHome() {
     const role = this.role || localStorage.getItem('role');
 

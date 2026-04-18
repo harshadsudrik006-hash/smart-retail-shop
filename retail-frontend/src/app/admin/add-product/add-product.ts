@@ -13,10 +13,13 @@ styleUrl:'./add-product.css'
 })
 export class AddProduct implements OnInit{
 
+// ✅ GLOBAL API (FIXED)
+API = "https://smart-retail-shop-major-project.onrender.com/api";
+
 name="";
 price=0;
-originalPrice=0;   // 🔥 NEW
-weight="";         // 🔥 NEW
+originalPrice=0;
+weight="";
 stock=0;
 description="";
 
@@ -24,7 +27,7 @@ category="";
 subCategory="";
 
 image:any;
-preview:any = null; // 🔥 IMAGE PREVIEW
+preview:any = null;
 
 categories:any[]=[];
 subcategories:any[]=[];
@@ -37,17 +40,17 @@ this.loadCategories();
 
 /* Load Categories */
 loadCategories(){
-this.http.get("http://localhost:5000/api/categories")
+this.http.get(`${this.API}/categories`)
 .subscribe((res:any)=>{
-this.categories=res;
+this.categories = res;
 });
 }
 
 /* Load SubCategories */
 loadSubCategories(){
-this.http.get(`http://localhost:5000/api/subcategories/category/${this.category}`)
+this.http.get(`${this.API}/subcategories/category/${this.category}`)
 .subscribe((res:any)=>{
-this.subcategories=res;
+this.subcategories = res;
 });
 }
 
@@ -58,7 +61,7 @@ this.image = event.target.files[0];
 if(this.image){
   const reader = new FileReader();
   reader.onload = () => {
-    this.preview = reader.result; // 🔥 preview
+    this.preview = reader.result;
   };
   reader.readAsDataURL(this.image);
 }
@@ -82,8 +85,8 @@ const formData = new FormData();
 
 formData.append("name",this.name);
 formData.append("price",this.price.toString());
-formData.append("originalPrice",this.originalPrice.toString()); // 🔥
-formData.append("weight",this.weight); // 🔥
+formData.append("originalPrice",this.originalPrice.toString());
+formData.append("weight",this.weight);
 formData.append("stock",this.stock.toString());
 formData.append("description",this.description);
 formData.append("category",this.category);
@@ -93,7 +96,8 @@ if(this.image){
 formData.append("image",this.image);
 }
 
-this.http.post("http://localhost:5000/api/products",formData,{headers})
+// ✅ FIXED HERE
+this.http.post(`${this.API}/products`,formData,{headers})
 .subscribe({
 
 next:()=>{

@@ -71,7 +71,7 @@ export class Checkout implements OnInit{
 
   applyBestCoupon(){
     this.http.post(
-      "http://localhost:5000/api/coupons/best",
+      "http:///api/coupons/best",
       { cartTotal:this.cartTotal },
       this.getHeaders()
     ).subscribe({

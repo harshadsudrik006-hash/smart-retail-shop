@@ -11,8 +11,10 @@ imports:[CommonModule, FormsModule],
 templateUrl:'./edit-product.html',
 styleUrl:'./edit-product.css'
 })
-
 export class EditProduct implements OnInit{
+
+// ✅ GLOBAL API
+API = "https://smart-retail-shop-major-project.onrender.com/api";
 
 id="";
 name="";
@@ -28,25 +30,24 @@ private router:Router
 ){}
 
 ngOnInit(){
-
 this.id = this.route.snapshot.paramMap.get("id") || "";
-
 this.loadProduct();
-
 }
 
 /* Load Product */
 loadProduct(){
 
-this.http.get(`http://localhost:5000/api/products`)
+this.http.get(`${this.API}/products`)
 .subscribe((res:any)=>{
 
 const product = res.find((p:any)=>p._id === this.id);
 
-this.name = product.name;
-this.price = product.price;
-this.stock = product.stock;
-this.preview = product.image;
+if(product){
+  this.name = product.name;
+  this.price = product.price;
+  this.stock = product.stock;
+  this.preview = product.image;
+}
 
 });
 
@@ -87,7 +88,7 @@ formData.append("image",this.image);
 }
 
 this.http.put(
-`http://localhost:5000/api/products/${this.id}`,
+`${this.API}/products/${this.id}`,
 formData,
 {headers}
 ).subscribe({
@@ -107,7 +108,7 @@ alert("Update failed");
 }
 
 goBack(){
-    window.history.back();
+window.history.back();
 }
 
 }

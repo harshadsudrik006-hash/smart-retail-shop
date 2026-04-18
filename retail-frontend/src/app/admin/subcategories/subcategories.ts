@@ -10,8 +10,9 @@ imports:[CommonModule,FormsModule],
 templateUrl:'./subcategories.html',
 styleUrl:'./subcategories.css'
 })
-
 export class SubCategories implements OnInit{
+
+API = "https://smart-retail-shop-major-project.onrender.com/api"; // ✅ ADD THIS
 
 categories:any[]=[];
 subcategories:any[]=[];
@@ -22,28 +23,22 @@ selectedCategory="";
 constructor(private http:HttpClient){}
 
 ngOnInit(){
-
 this.loadCategories();
 this.loadSubCategories();
-
 }
 
 loadCategories(){
-
-this.http.get("http://localhost:5000/api/categories")
+this.http.get(`${this.API}/categories`)
 .subscribe((res:any)=>{
-this.categories=res;
+this.categories = res;
 });
-
 }
 
 loadSubCategories(){
-
-this.http.get("http://localhost:5000/api/subcategories")
+this.http.get(`${this.API}/subcategories`)
 .subscribe((res:any)=>{
-this.subcategories=res;
+this.subcategories = res;
 });
-
 }
 
 addSubCategory(){
@@ -55,7 +50,7 @@ Authorization:`Bearer ${token}`
 });
 
 this.http.post(
-"http://localhost:5000/api/subcategories",
+`${this.API}/subcategories`,
 {
 name:this.name,
 category:this.selectedCategory
@@ -83,7 +78,7 @@ Authorization:`Bearer ${token}`
 });
 
 this.http.delete(
-`http://localhost:5000/api/subcategories/${id}`,
+`${this.API}/subcategories/${id}`,
 {headers}
 ).subscribe(()=>{
 
@@ -104,23 +99,28 @@ this.updatedSubName = sub.name;
 }
 
 updateSubCategory(){
+
 const token = localStorage.getItem("token");
 
 this.http.put(
-`http://localhost:5000/api/subcategories/${this.selectedSub._id}`,
+`${this.API}/subcategories/${this.selectedSub._id}`,
 { name:this.updatedSubName },
 {
 headers:{ Authorization:`Bearer ${token}` }
 }
 ).subscribe(()=>{
+
 alert("Updated");
+
 this.selectedSub=null;
 this.loadSubCategories();
+
 });
+
 }
 
 goBack(){
-    window.history.back();
+window.history.back();
 }
 
 }

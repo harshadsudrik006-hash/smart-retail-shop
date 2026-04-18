@@ -13,6 +13,9 @@ import { Auth } from '../../core/services/auth';
 })
 export class Category implements OnInit{
 
+  // ✅ ADDED (GLOBAL API)
+  API = "https://smart-retail-shop-major-project.onrender.com/api";
+
   categories:any[]=[];
   subcategories:any[]=[];
   selectedCategoryId:string="";
@@ -36,7 +39,7 @@ export class Category implements OnInit{
 
       this.selectedCategoryId = categoryId;
 
-      this.http.get("http://localhost:5000/api/categories")
+      this.http.get(`${this.API}/categories`)   // ✅ FIXED
       .subscribe((res:any)=>{
         this.categories = res;
       });
@@ -48,7 +51,7 @@ export class Category implements OnInit{
 
   loadSubCategories(categoryId:string){
 
-    this.http.get(`http://localhost:5000/api/subcategories/category/${categoryId}`)
+    this.http.get(`${this.API}/subcategories/category/${categoryId}`)   // ✅ FIXED
     .subscribe((res:any)=>{
 
       this.subcategories = res;
@@ -67,7 +70,7 @@ export class Category implements OnInit{
 
     this.selectedSub = sub;
 
-    this.http.get(`http://localhost:5000/api/products/subcategory/${sub._id}`)
+    this.http.get(`${this.API}/products/subcategory/${sub._id}`)   // ✅ FIXED
     .subscribe((res:any)=>{
 
       this.products = res;
@@ -116,7 +119,6 @@ export class Category implements OnInit{
 
     this.quantities[p._id] = 1;
 
-    // 🔥 send +1
     this.addToCart(p, 1);
   }
 
@@ -130,10 +132,8 @@ export class Category implements OnInit{
       return;
     }
 
-    // 🔥 UI update
     this.quantities[p._id] = currentQty + 1;
 
-    // 🔥 send +1 only
     this.addToCart(p, 1);
   }
 
@@ -143,10 +143,8 @@ export class Category implements OnInit{
 
     if(currentQty > 1){
 
-      // 🔥 UI update
       this.quantities[p._id] = currentQty - 1;
 
-      // 🔥 send -1 only
       this.addToCart(p, -1);
 
     }else{
@@ -189,23 +187,19 @@ export class Category implements OnInit{
     });
 
     this.http.post(
-      "http://localhost:5000/api/cart/add",
+      `${this.API}/cart/add`,   // ✅ FIXED
       {
         productId: product._id,
-        quantity: quantity   // 🔥 IMPORTANT: delta only
+        quantity: quantity
       },
       { headers }
     ).subscribe({
 
       next: () => {
-
-        // 🔥 sync navbar count
         window.dispatchEvent(new Event('cartUpdated'));
-
       },
 
       error: (err) => {
-
         console.log("Cart Error:", err);
 
         alert(
@@ -226,12 +220,10 @@ export class Category implements OnInit{
     });
 
     this.http.delete(
-      `http://localhost:5000/api/cart/${product._id}`,
+      `${this.API}/cart/${product._id}`,   // ✅ FIXED
       { headers }
     ).subscribe(()=>{
-
       window.dispatchEvent(new Event('cartUpdated'));
-
     });
   }
 
